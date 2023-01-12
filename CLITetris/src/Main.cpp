@@ -1,12 +1,8 @@
-﻿// CLITetris.cpp : Defines the entry point for the application.
-//
-
 #include "CLITetris.h"
 
 using namespace std;
 
-int main()
-{
+int Initialize() {
 	cout << "Hello CMake." << endl;
 	return 0;
 }
