@@ -1,34 +1,54 @@
-#pragma once
+#include <CLITetris.h>
 
-#include "CLITetris.h"
+#pragma once
 
 class Piece {
 
 
 public:
-	typedef enum Shape {
-		SQUARE,
+	/// <summary>
+	/// Enumerating tetromino type codes to instance the piece.
+	/// </summary>
+	typedef enum Tetromino {
+		O,
 		L,
-		RECTANGLE,
-		PYRAMID
-	} Shape;
+		J,
+		I,
+		T,
+		S,
+		Z
+	} Tetromino;
 
-	Piece(Shape _shape) {
-		switch (_shape) {
+	/// <summary>
+	/// Default constructor. Tetromino required for instancing.
+	/// </summary>
+	/// <param name="_tetromino">: The desired tetromino type.</param>
+	Piece(Tetromino __tetromino);
 
-			default:throw;
-		}
-	}
-
+	/// <summary>
+	/// Bidimensional coordinate structure. Each piece has 4.
+	/// </summary>
 	typedef struct Block {
 		int x = -1;
 		int y = -1;
 	} Block;
 
-	Block *GetPiece;
+	/// <summary>
+	/// Returns pointer to allocated coordinates from this piece.
+	/// </summary>
+	Block *GetPiece();
 
 	void Rotate(int _degrees);
 
+	
 protected:
-	Block *piece;
+	/// <summary>
+	/// Accesses memory to allocate the memory addresses and sets the coordinates for each piece block.
+	/// </summary>
+	/// <param name="tetromino">: The desired tetromino type.</param>
+	/// <returns>A pointer to the allocated memory.</returns>
+	Block* AllocatePiece(Piece::Tetromino tetromino);
+
+	Block *_blocks = NULL;
+	Tetromino _tetromino;
 };
