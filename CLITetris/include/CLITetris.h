@@ -4,5 +4,14 @@
 #pragma once
 
 #include <iostream>
+#include <windows.h>
+#include <io.h>
+#include <fcntl.h>
 
 // TODO: Reference additional headers your program requires here.
+
+/// <summary>
+/// Applies system configurations before starting the application logic.
+/// </summary>
+///  <returns>The ammount of functions ran.</returns>
+int BeforeInitialize();
