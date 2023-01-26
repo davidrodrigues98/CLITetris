@@ -7,6 +7,7 @@
 #include <windows.h>
 #include <io.h>
 #include <fcntl.h>
+#include <vector>
 
 // TODO: Reference additional headers your program requires here.
 
