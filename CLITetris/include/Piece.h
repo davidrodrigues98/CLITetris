@@ -1,9 +1,9 @@
-#include <CLITetris.h>
-
 #pragma once
 
-class Piece {
+#include <CLITetris.h>
 
+
+class Piece {
 
 public:
 	/// <summary>

@@ -1,8 +1,23 @@
-#include "CLITetris.h"
+/*#include <Main.h>
 
-using namespace std;
+void ManageConsoleMode(bool _gameMode) {
+    HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
+    INPUT_RECORD irInBuf[2];
+    DWORD cNumRead;
+    GetConsoleMode(hStdIn, &fdwOldMode);
+    // disable mouse and window input
+    fdwMode = ENABLE_INSERT_MODE || ENABLE_WINDOW_INPUT;
+    SetConsoleMode(hStdIn, fdwMode);
+}
 
-int Initialize() {
-	cout << "Hello CMake." << endl;
+int devInitialize() {
+	//? wprintf(L"Hello CMake.");
+	//Game* gameInstance = new Game();
 	return 0;
 }
+
+int Initialize(bool _dev) {
+	if(_dev)
+		devInitialize();
+	return 0;
+}*/

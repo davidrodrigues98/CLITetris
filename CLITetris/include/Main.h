@@ -1,1 +1,3 @@
-int Initialize();
+//#pragma once
+
+//#include <Game.h>

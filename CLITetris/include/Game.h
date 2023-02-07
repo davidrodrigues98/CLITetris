@@ -1,6 +1,6 @@
-#include <Piece.h>
+#pragma once
 
-void ManageConsoleMode(bool _gameMode = true);
+#include <Piece.h>
 
 /// <summary>
 /// Class for game logic.
@@ -9,29 +9,29 @@ void ManageConsoleMode(bool _gameMode = true);
 /// </summary>
 class Game {
 protected:
-	vector<Piece> _piece;
+	//? vector<Piece> _piece;
 	Piece::Tetromino * _tetrominoQueueLL;
 
 	/// <summary>
 	/// Function that generates the starting pieces.
 	/// </summary>
-	/// <param name="_officialRules"> Should the algorithm use the official sequence rule, or total randomization?</param>
-	void GenerateRandomTetrominoQueue(bool _officialRules = true);
+	/// <param name="_officialRules">(Optional) Printing debug for testing purposes.</param>
+	void GenerateRandomTetrominoQueue(bool _print = false);
 
 	/// <summary>
 	/// Takes the first piece from the queue and inserts one more at the last.
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>The removed tetromino type enumerator.</returns>
 	Piece::Tetromino TakeFromTetrominoQueue();
 public:
 	/// <summary>
 	/// Constructor for menu-based parameters.
 	/// </summary>
 	/// <param name="_gameSpeed">stands for game speed in milisseconds (ms).</param>
-	Game(int _gameSpeed);
+	Game(int _gameSpeed, bool print);
 
 	/// <summary>
 	/// Constructor for the defaut parameters taken from the configuration files (.cfg).
 	/// </summary>
-	Game();
+	Game(bool print = false);
 };
