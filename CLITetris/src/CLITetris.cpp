@@ -1,6 +1,7 @@
 ﻿// CLITetris.cpp : Defines the entry point for the application.
 #include <CLITetris.h>
 #include <Game.h>
+#include <Printer.h>
 
 using namespace std;
 
@@ -24,8 +25,11 @@ void ManageConsoleMode(bool _gameMode) {
 }
 
 int devInitialize() {
-	//? wprintf(L"Hello CMake.");
-	Game* gameInstance = new Game(true);
+	ConsolePrint(Visuals::BLOCK);
+	ConsolePrint(Visuals::BORDERH);
+	ConsolePrint(Visuals::BORDERV);
+	ConsolePrint(Visuals::EMPTY);
+	//? Game* gameInstance = new Game(true);
 	return 0;
 }
 

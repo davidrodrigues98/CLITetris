@@ -3,6 +3,15 @@
 #include <Piece.h>
 
 /// <summary>
+/// Structure to handle linked list queue management.
+/// </summary>
+typedef struct TetrominoNode {
+	// Tetromino value.
+	Piece::Tetromino value;
+	TetrominoNode* next;
+} TetrominoNode;
+
+/// <summary>
 /// Class for game logic.
 /// In game memory and steps validation.
 /// Each instance is a round of a game.

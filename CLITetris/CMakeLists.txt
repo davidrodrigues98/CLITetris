@@ -18,5 +18,6 @@ add_executable (
 	"src/Game.cpp"
 	"include/Config.h"
 	"src/Config.cpp"
-)
+	"include/Printer.h"
+	"src/Printer.cpp")
 # TODO: Add tests and install targets if needed.

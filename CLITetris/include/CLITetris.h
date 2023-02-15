@@ -8,6 +8,7 @@
 #include <io.h>
 #include <fcntl.h>
 #include <vector>
+#include <map>
 #include <random>
 #include <algorithm>
 #include <chrono>
