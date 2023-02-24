@@ -16,20 +16,20 @@ int BeforeInitialize() {
 
 void ManageConsoleMode(bool _gameMode) {
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
-	INPUT_RECORD irInBuf[2];
-	DWORD cNumRead;
-	GetConsoleMode(hStdIn, &fdwOldMode);
-	// disable mouse and window input
-	fdwMode = ENABLE_INSERT_MODE || ENABLE_WINDOW_INPUT;
-	SetConsoleMode(hStdIn, fdwMode);
+	if (_gameMode == true) {
+		INPUT_RECORD irInBuf[2];
+		DWORD cNumRead;
+		GetConsoleMode(hStdIn, &fdwOldMode);
+		// disable mouse and window input
+		fdwMode = ENABLE_INSERT_MODE || ENABLE_WINDOW_INPUT;
+		SetConsoleMode(hStdIn, fdwMode);
+	}
+	else
+		SetConsoleMode(hStdIn, fdwOldMode);
 }
 
 int devInitialize() {
-	ConsolePrint(Visuals::BLOCK);
-	ConsolePrint(Visuals::BORDERH);
-	ConsolePrint(Visuals::BORDERV);
-	ConsolePrint(Visuals::EMPTY);
-	//? Game* gameInstance = new Game(true);
+	Game* gameInstance = new Game(true);
 	return 0;
 }
 

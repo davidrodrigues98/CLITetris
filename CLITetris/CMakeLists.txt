@@ -10,8 +10,6 @@ add_executable (
 	CLITetris
 	"include/CLITetris.h"
 	"src/CLITetris.cpp"
-	"include/Main.h"
-	"src/Main.cpp"
 	"include/Piece.h" 
 	"src/Piece.cpp"
 	"include/Game.h"

@@ -1,16 +1,31 @@
 #include <Game.h>
 using namespace std;
 
-TetrominoNode* head, * tail;
+TetrominoNode *gQueueHead, *gQueueTail;
+GameStatus gGameStatus;
 
 Game::Game(bool print) {
-    //? this->_tetrominoQueueLL = (Piece::Tetromino*)malloc(7 * sizeof(Piece::Tetromino));
+    // The game is ready to start.
     Game::GenerateRandomTetrominoQueue(print);
+    gGameStatus = START;
 }
 
-/*Piece::Tetromino TakeFromTetrominoQueue() {
+KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
+{
+    WORD recordedKeyCode = ker.wVirtualKeyCode;
+    KeyBind result;
 
-}*/
+    // Virtual key mapping.
+    switch (recordedKeyCode)
+    {
+    case 37: result = LEFT; break;
+    case 38: result = UP;  break;
+    case 39: result = RIGHT; break;
+    case 40: result = DOWN; break;
+    }
+
+    return result;
+}
 
 void Game::GenerateRandomTetrominoQueue(bool _print) {
     // Fixed array to support the starting randomization.
@@ -42,14 +57,63 @@ void Game::GenerateRandomTetrominoQueue(bool _print) {
     // Creating linked list based on the randomized array.
     TetrominoNode *fill_ptr = (TetrominoNode*)malloc(sizeof(TetrominoNode));
     fill_ptr->value = shuffleData[0];
+    fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
     fill_ptr = fill_ptr->next;
-    head = fill_ptr;
+    gQueueHead = fill_ptr;
     for (int i = 1; i < TETRO_QUEUE_SIZE; i++)
     {
         fill_ptr->value = shuffleData[i];
         fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
         fill_ptr = fill_ptr->next;
-        tail = fill_ptr;
+        gQueueTail = fill_ptr;
         fill_ptr->next = NULL;
+    }
+    gQueueTail->next = gQueueHead;
+}
+
+void CycleTetrominoQueue() {
+    gQueueHead = gQueueHead->next;
+}
+
+Piece::Tetromino TakeFromTetrominoQueue() {
+    Piece::Tetromino result = gQueueHead->value;
+    CycleTetrominoQueue();
+    return result;
+}
+
+void win32_TimeStep(KeyBind& _nextMove, /*Snake* __snake,*/ HANDLE _hStdIn, DWORD& _cNumRead, INPUT_RECORD(&_irInBuf)[INPUT_RECORD_BUFFER_SIZE]) {
+
+    switch (WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S **/ 1000)) {
+    case WAIT_OBJECT_0:
+        ReadConsoleInput(
+            _hStdIn,
+            _irInBuf,
+            INPUT_RECORD_BUFFER_SIZE,
+            &_cNumRead
+        );
+        if (_irInBuf[_cNumRead - 1].Event.KeyEvent.bKeyDown)
+            _nextMove = KeyEventProc(_irInBuf[_cNumRead - 1].Event.KeyEvent);
+        break;
+    case WAIT_TIMEOUT:
+        break;
+    };
+
+}
+
+void Update() {
+    
+}
+
+void StartGame() {
+    ManageConsoleMode(true);                    // Enabling input processing for game mode.
+    while (gGameStatus != OVER) {               // The game cycle starts here.
+        //KeyBind nextMove = _snake->direction;   // The default input resets to the snake default/latest direction.
+
+
+        //win32_TimeStep(nextMove, _snake, hStdIn, cNumRead, irInBuf);
+        //FlushConsoleInputBuffer(hStdIn);
+
+
+        //endGame = _snake->Move(nextMove); // This step processes the whole snake movement and game status.
     }
 }

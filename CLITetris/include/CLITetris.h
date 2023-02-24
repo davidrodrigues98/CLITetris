@@ -21,6 +21,7 @@
 #pragma region Global program definitions.
 // Tetromino queue size of array.
 #define TETRO_QUEUE_SIZE 7
+#define INPUT_RECORD_BUFFER_SIZE 2
 #pragma endregion
 
 /// <summary>
