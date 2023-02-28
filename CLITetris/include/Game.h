@@ -22,16 +22,6 @@ typedef enum GameStatus {
 } GameStatus;
 
 /// <summary>
-/// Enumerator to process key mapping against the application.
-/// </summary>
-typedef enum KeyBind {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-} KeyBind;
-
-/// <summary>
 /// Class for game logic.
 /// In game memory and steps validation.
 /// Each instance is a round of a game.
@@ -53,18 +43,6 @@ protected:
 	/// <returns>The removed tetromino type enumerator.</returns>
 	Piece::Tetromino TakeFromTetrominoQueue();
 
-	/// <summary>
-	/// Executed when the event input handling system is fired. This function maps the virtual keys with the controls enum interface.
-	/// </summary>
-	/// <param name="ker">The triggered event.</param>
-	/// <returns></returns>
-	KeyBind KeyEventProc(KEY_EVENT_RECORD ker);
-
-	/// <summary>
-	/// Executed every time the game cycle is up.
-	/// </summary>
-	void win32_TimeStep(KeyBind& _nextMove, /*Snake* __snake,*/ HANDLE _hStdIn, DWORD& _cNumRead, INPUT_RECORD(&_irInBuf)[INPUT_RECORD_BUFFER_SIZE]);
-
 public:
 	/// <summary>
 	/// Constructor for menu-based parameters.
@@ -76,8 +54,6 @@ public:
 	/// Constructor for the defaut parameters taken from the configuration files (.cfg).
 	/// </summary>
 	Game(bool print = false);
-
-	void CycleTetrominoQueue();
 
 	void Update();
 

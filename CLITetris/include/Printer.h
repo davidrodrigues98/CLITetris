@@ -7,6 +7,6 @@ typedef enum Visuals {
 	EMPTY,
 	BORDERV,
 	BORDERH
-};
+} Visuals;
 
 int ConsolePrint(Visuals _visual);

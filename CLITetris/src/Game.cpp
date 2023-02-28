@@ -10,22 +10,7 @@ Game::Game(bool print) {
     gGameStatus = START;
 }
 
-KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
-{
-    WORD recordedKeyCode = ker.wVirtualKeyCode;
-    KeyBind result;
 
-    // Virtual key mapping.
-    switch (recordedKeyCode)
-    {
-    case 37: result = LEFT; break;
-    case 38: result = UP;  break;
-    case 39: result = RIGHT; break;
-    case 40: result = DOWN; break;
-    }
-
-    return result;
-}
 
 void Game::GenerateRandomTetrominoQueue(bool _print) {
     // Fixed array to support the starting randomization.
@@ -71,40 +56,18 @@ void Game::GenerateRandomTetrominoQueue(bool _print) {
     gQueueTail->next = gQueueHead;
 }
 
-void CycleTetrominoQueue() {
-    gQueueHead = gQueueHead->next;
-}
 
 Piece::Tetromino TakeFromTetrominoQueue() {
     Piece::Tetromino result = gQueueHead->value;
-    CycleTetrominoQueue();
+    gQueueHead = gQueueHead->next;
     return result;
 }
 
-void win32_TimeStep(KeyBind& _nextMove, /*Snake* __snake,*/ HANDLE _hStdIn, DWORD& _cNumRead, INPUT_RECORD(&_irInBuf)[INPUT_RECORD_BUFFER_SIZE]) {
-
-    switch (WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S **/ 1000)) {
-    case WAIT_OBJECT_0:
-        ReadConsoleInput(
-            _hStdIn,
-            _irInBuf,
-            INPUT_RECORD_BUFFER_SIZE,
-            &_cNumRead
-        );
-        if (_irInBuf[_cNumRead - 1].Event.KeyEvent.bKeyDown)
-            _nextMove = KeyEventProc(_irInBuf[_cNumRead - 1].Event.KeyEvent);
-        break;
-    case WAIT_TIMEOUT:
-        break;
-    };
-
-}
-
-void Update() {
+void Game::Update() {
     
 }
 
-void StartGame() {
+void Game::StartGame() {
     ManageConsoleMode(true);                    // Enabling input processing for game mode.
     while (gGameStatus != OVER) {               // The game cycle starts here.
         //KeyBind nextMove = _snake->direction;   // The default input resets to the snake default/latest direction.
