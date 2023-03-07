@@ -8,13 +8,13 @@ using namespace std;
 DWORD gFdwMode, gFdwOldMode;
 
 // Flags and structures that will be used in multiple threads.
-atomic<bool> gFlagTimerStart(false), gFlagStepDone(true);
+atomic<bool> gTerminateGameUpdaterThread(false), gGameUpdaterInputEnabled(false);
 atomic<KeyBind> gNextAction(IDLE);
 
 KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
 {
 	WORD recordedKeyCode = ker.wVirtualKeyCode;
-	KeyBind result;
+	KeyBind result = IDLE;
 
 	// Virtual key mapping.
 	switch (recordedKeyCode)
@@ -28,8 +28,11 @@ KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
 	return result;
 }
 
-void win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn, DWORD& _cNumRead, INPUT_RECORD(&_irInBuf)[INPUT_RECORD_BUFFER_SIZE]) {
-	switch (WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S **/ 1000)) {
+long win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn, DWORD& _cNumRead, INPUT_RECORD(&_irInBuf)[INPUT_RECORD_BUFFER_SIZE]) {
+	wprintf(L"Debug -> win32_TimeStep");
+	long result = WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S **/ 1000);
+	switch(result)
+	{
 	case WAIT_OBJECT_0:
 		ReadConsoleInput(
 			_hStdIn,
@@ -47,6 +50,8 @@ void win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn, DWORD& _cNumRead, INPUT
 		gNextAction = IDLE;
 		break;
 	};
+	FlushConsoleInputBuffer(_hStdIn);
+	return result;
 }
 
 /// <summary>
@@ -57,12 +62,15 @@ void GameUpdater(int _time_ms, Game *_instance) {
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
 	INPUT_RECORD irInBuf[INPUT_RECORD_BUFFER_SIZE];
 	DWORD cNumRead;
-	while (gFlagTimerStart == true)
-	{
-		win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
-		this_thread::sleep_for(chrono::milliseconds(_time_ms));
-		_instance->Update();
-	}
+	do {
+		while (gGameUpdaterInputEnabled == true)
+		{
+			this_thread::sleep_for(chrono::milliseconds(_time_ms));
+			win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
+			//? wprintf(L"%s\n", stringify(gNextAction));
+			//_instance->Update();
+		}
+	} while (gTerminateGameUpdaterThread == false);
 }
 
 void ManageConsoleMode(bool _gameMode) {
@@ -86,8 +94,12 @@ int BeforeInitialize() {
 }
 
 int devInitialize() {
-	Game* gameInstance = new Game(true);
-	//thread(GameUpdater);
+	
+	ManageConsoleMode(true);
+	Game* gameInstance = new Game();
+	thread t(GameUpdater, 400, gameInstance);
+	gGameUpdaterInputEnabled = true;
+	t.join();
 	return 0;
 }
 
