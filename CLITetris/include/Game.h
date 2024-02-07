@@ -3,6 +3,26 @@
 #include <Piece.h>
 
 /// <summary>
+/// Enumerator to process key mapping against the application.
+/// </summary>
+typedef enum KeyBind {
+//?	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	ROTATE_LEFT,
+	ROTATE_RIGHT,
+	IDLE //Special action for when an user doesn't press any key at a given time interval.
+} KeyBind;
+
+/// <summary>
+/// Maps the key code (windows) to the enumerator interface in the program.
+/// </summary>
+/// <param name="ker">The windows "key pressed" event to process.</param>
+/// <returns>Respective enumerator code.</returns>
+KeyBind KeyEventProc(KEY_EVENT_RECORD ker);
+
+/// <summary>
 /// Structure to handle linked list queue management.
 /// </summary>
 typedef struct TetrominoNode {
@@ -30,12 +50,13 @@ class Game {
 protected:
 	//? vector<Piece> _piece;
 	Piece::Tetromino * _tetrominoQueueLL;
-
+	
 	/// <summary>
 	/// Function that generates the starting pieces.
 	/// </summary>
-	/// <param name="_officialRules">(Optional) Printing debug for testing purposes.</param>
-	void GenerateRandomTetrominoQueue(bool _print = false);
+	/// <param name="_double_bag">true: Use double bag randomization. false: Use single bag randomization.</param>
+	/// <param name="_print">(Optional) Printing debug for testing purposes.</param>
+	void GenerateRandomTetrominoQueue(bool _double_bag, bool _print = false);
 
 	/// <summary>
 	/// Takes the first piece from the queue and inserts one more at the last.
@@ -48,14 +69,21 @@ public:
 	/// Constructor for menu-based parameters.
 	/// </summary>
 	/// <param name="_gameSpeed">stands for game speed in milisseconds (ms).</param>
-	Game(int _gameSpeed, bool print);
+	Game(int _gameSpeed, bool _doubleBag, bool _print = false);
 
 	/// <summary>
 	/// Constructor for the defaut parameters taken from the configuration files (.cfg).
 	/// </summary>
-	Game(bool print = false);
+	Game(bool _double_bag, bool _print = false);
 
-	void Update();
+	/// <summary>
+	/// Function is the main entry point of user input and game management that instructs the program what to do over time.
+	/// </summary>
+	/// <param name="nextAction">The input that will be processed. This is definitive.</param>
+	void Update(KeyBind nextAction);
 
+	/// <summary>
+	/// Function to start the game in the standard way. No debugs or test prints: Official game start.
+	/// </summary>
 	void StartGame();
 };

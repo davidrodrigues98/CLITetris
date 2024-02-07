@@ -24,24 +24,6 @@
 #pragma endregion
 
 /// <summary>
-/// Enumerator to process key mapping against the application.
-/// </summary>
-typedef enum KeyBind {
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	IDLE //Special action for when an user doesn't press any key at a given time interval.
-} KeyBind;
-
-/// <summary>
-/// Maps the key code (windows) to the enumerator interface in the program.
-/// </summary>
-/// <param name="ker">The windows "key pressed" event to process.</param>
-/// <returns>Respective enumerator code.</returns>
-KeyBind KeyEventProc(KEY_EVENT_RECORD ker);
-
-/// <summary>
 /// Prepares the opened command line interface to handle the user game events.
 /// </summary>
 /// <param name="_gameMode">(Optional) What is the gamemode being prepared?</param>

@@ -20,6 +20,14 @@ public:
 	} Tetromino;
 
 	/// <summary>
+	/// Simple enumerator to simplify rotation input.
+	/// </summary>
+	typedef enum PieceBlockRotation {
+		LEFT,
+		RIGHT
+	} PieceBlockRotation;
+
+	/// <summary>
 	/// Default constructor. Tetromino required for instancing.
 	/// </summary>
 	/// <param name="_tetromino">: The desired tetromino type.</param>
@@ -38,7 +46,11 @@ public:
 	/// </summary>
 	Block *GetPiece();
 
-	void Rotate(int _degrees);
+	/// <summary>
+	/// Algorithm to rotate the selected tetromino piece in a given direction.
+	/// </summary>
+	/// <param name="_direction">Input direction: LEFT or RIGHT.</param>
+	void Rotate(PieceBlockRotation _direction);
 
 	
 protected:
