@@ -17,5 +17,5 @@ add_executable (
 	"include/Config.h"
 	"src/Config.cpp"
 	"include/Printer.h"
-	"src/Printer.cpp")
+	"src/Printer.cpp" "include/Global.h")
 # TODO: Add tests and install targets if needed.

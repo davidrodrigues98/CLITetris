@@ -45,9 +45,9 @@ void GameUpdater(Game *_instance) {
 	DWORD cNumRead;
 	do {
 
-			win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
-			FlushConsoleInputBuffer(hStdIn);
-			_instance->Update(gNextAction);
+		win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
+		FlushConsoleInputBuffer(hStdIn);
+		_instance->Update(gNextAction);
 		
 	} while (true); //gTerminateGameUpdaterThread == false);
 }
@@ -91,7 +91,9 @@ int devInitialize() {
 
 	// Starts new game object.
 	Game* gameInstance = new Game(true);
-
+	
+	// Starts the game directly.
+	gameInstance->StartGame();
 	// Declares array of threads to run tasks simultaneously.
 	vector<thread> threads;
 

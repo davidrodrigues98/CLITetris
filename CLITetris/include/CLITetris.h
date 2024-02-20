@@ -14,6 +14,8 @@
 #include <chrono>
 #include <thread>
 
+#include <Global.h>
+
 // Reference additional headers your program requires here.
 
 #pragma region Global macro definitions.

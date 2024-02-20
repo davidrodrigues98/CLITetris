@@ -2,7 +2,6 @@
 
 #include <CLITetris.h>
 
-
 class Piece {
 
 public:
@@ -31,7 +30,7 @@ public:
 	/// Default constructor. Tetromino required for instancing.
 	/// </summary>
 	/// <param name="_tetromino">: The desired tetromino type.</param>
-	Piece(Tetromino __tetromino);
+	Piece(Tetromino _tetromino);
 
 	/// <summary>
 	/// Bidimensional coordinate structure. Each piece has 4.
@@ -52,6 +51,10 @@ public:
 	/// <param name="_direction">Input direction: LEFT or RIGHT.</param>
 	void Rotate(PieceBlockRotation _direction);
 
+	/// <summary>
+	/// Property tetromino type.
+	/// </summary>
+	Tetromino tetromino;
 	
 protected:
 	/// <summary>
@@ -62,5 +65,4 @@ protected:
 	Block* AllocatePiece(Piece::Tetromino tetromino);
 
 	Block *_blocks = NULL;
-	Tetromino _tetromino;
 };

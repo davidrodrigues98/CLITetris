@@ -1,7 +1,7 @@
 #include <Game.h>
 using namespace std;
 
-TetrominoNode *gQueueHead, *gQueueTail;
+TetrominoNode *gQueueHead, *gQueueTail, *gQueueCurrent;
 GameStatus gGameStatus;
 
 KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
@@ -22,8 +22,8 @@ KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
 }
 
 Game::Game(bool _doubleBag, bool _print) {
-    // The game is ready to start.
     Game::GenerateRandomTetrominoQueue(_doubleBag, _print);
+    // Setting new game status.
     gGameStatus = START;
 }
 
@@ -46,8 +46,7 @@ void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
     // Only use 1 bag with 7 distinct tetromino.
     if (_double_bag == false) {
         // Shuffling our array
-        shuffle(shuffleData, shuffleData + TETRO_QUEUE_SIZE,
-            default_random_engine(seed));
+        shuffle(shuffleData, shuffleData + TETRO_QUEUE_SIZE, default_random_engine(seed));
 
         // Printing array (for debug testing).
         if (_print) {
@@ -60,17 +59,19 @@ void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
         TetrominoNode* fill_ptr = (TetrominoNode*)malloc(sizeof(TetrominoNode));
         fill_ptr->value = shuffleData[0];
         fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
-        fill_ptr = fill_ptr->next;
         gQueueHead = fill_ptr;
+        fill_ptr = fill_ptr->next;
+
         for (int i = 1; i < TETRO_QUEUE_SIZE; i++)
         {
             fill_ptr->value = shuffleData[i];
             fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
-            fill_ptr = fill_ptr->next;
             gQueueTail = fill_ptr;
-            fill_ptr->next = NULL;
+            fill_ptr = fill_ptr->next;
         }
+
         gQueueTail->next = gQueueHead;
+        gQueueCurrent = gQueueHead;
     }
     // Use 2 bags with 7 distinct tetromino in each.
     else {
@@ -108,53 +109,66 @@ void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
         TetrominoNode* fill_ptr = (TetrominoNode*)malloc(sizeof(TetrominoNode));
         fill_ptr->value = shuffleData[0];
         fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
-        fill_ptr = fill_ptr->next;
         gQueueHead = fill_ptr;
+        fill_ptr = fill_ptr->next;
         for (int i = 1; i < TETRO_QUEUE_SIZE; i++)
         {
             fill_ptr->value = shuffleData[i];
             fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
-            fill_ptr = fill_ptr->next;
             gQueueTail = fill_ptr;
-            fill_ptr->next = NULL;
+            fill_ptr = fill_ptr->next;
         }
         for (int i = 0; i < TETRO_QUEUE_SIZE; i++)
         {
             fill_ptr->value = shuffleData2[i];
             fill_ptr->next = (TetrominoNode*)malloc(sizeof(TetrominoNode));
-            fill_ptr = fill_ptr->next;
             gQueueTail = fill_ptr;
-            fill_ptr->next = NULL;
+            fill_ptr = fill_ptr->next;
         }
         gQueueTail->next = gQueueHead;
+        gQueueCurrent = gQueueHead;
     }
 }
 
 
 Piece::Tetromino TakeFromTetrominoQueue() {
-    Piece::Tetromino result = gQueueHead->value;
-    gQueueHead = gQueueHead->next;
+    Piece::Tetromino result = gQueueCurrent->value;
+    gQueueCurrent = gQueueCurrent->next;
     return result;
 }
 
-void Game::Update(KeyBind nextAction) {
-    switch (nextAction) {
-        case KeyBind::DOWN: break;
-        case KeyBind::LEFT: break;
-        case KeyBind::RIGHT: break;
+void Game::Update(KeyBind _nextAction, bool _print) {
+    switch (gGameStatus) {
+        case GameStatus::START: 
+            _activePiece = new Piece(TakeFromTetrominoQueue());
+            if(_print) 
+                wprintf(L"%i\n", _activePiece->tetromino);
+            gGameStatus = GameStatus::MOVE;
+            break;
+        case GameStatus::MOVE:
+            ProcessMovement(_nextAction, _print);
+            break;
+    }
+}
+
+void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
+    switch (_nextAction) {
+        case KeyBind::DOWN: 
+            wprintf(L"DOWN\n");
+            break;
+        case KeyBind::LEFT:
+            wprintf(L"LEFT\n");
+            break;
+        case KeyBind::RIGHT:
+            wprintf(L"RIGHT\n");
+            break;
         case KeyBind::ROTATE_LEFT: break;
         case KeyBind::ROTATE_RIGHT: break;
     }
-    
 }
 
 void Game::StartGame() {
-    ManageConsoleMode(true);                    // Enabling input processing for game mode.
-    while (gGameStatus != OVER) {               // The game cycle starts here.
-
-        //KeyBind nextMove = _snake->direction;   // The default input resets to the snake default/latest direction.
-        //win32_TimeStep(nextMove, _snake, hStdIn, cNumRead, irInBuf);
-        //FlushConsoleInputBuffer(hStdIn);
-        //endGame = _snake->Move(nextMove); // This step processes the whole snake movement and game status.
-    }
+    //? while (gGameStatus != OVER) {               // The game cycle starts here.
+    gGameStatus = GameStatus::START;
+    //? }
 }

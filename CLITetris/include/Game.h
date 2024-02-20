@@ -32,6 +32,13 @@ typedef struct TetrominoNode {
 } TetrominoNode;
 
 /// <summary>
+/// Statistics and Game Score.
+/// </summary>
+typedef struct GameDetails {
+	int score = 0;
+} GameDetails;
+
+/// <summary>
 /// Enumerator to help describing the current game status.
 /// </summary>
 typedef enum GameStatus {
@@ -49,6 +56,8 @@ typedef enum GameStatus {
 class Game {
 protected:
 	//? vector<Piece> _piece;
+
+	BoardRules _boardRules;
 	Piece::Tetromino * _tetrominoQueueLL;
 	
 	/// <summary>
@@ -59,12 +68,14 @@ protected:
 	void GenerateRandomTetrominoQueue(bool _double_bag, bool _print = false);
 
 	/// <summary>
-	/// Takes the first piece from the queue and inserts one more at the last.
+	/// Complementary function to process input movement when the game status allows it.
 	/// </summary>
-	/// <returns>The removed tetromino type enumerator.</returns>
-	Piece::Tetromino TakeFromTetrominoQueue();
+	/// <param name="_nextAction">User input.</param>
+	/// <param name="_print">Print debug lines for testing purposes.</param>
+	void ProcessMovement(KeyBind _nextAction, bool _print=false);
 
 public:
+
 	/// <summary>
 	/// Constructor for menu-based parameters.
 	/// </summary>
@@ -79,11 +90,17 @@ public:
 	/// <summary>
 	/// Function is the main entry point of user input and game management that instructs the program what to do over time.
 	/// </summary>
-	/// <param name="nextAction">The input that will be processed. This is definitive.</param>
-	void Update(KeyBind nextAction);
+	/// <param name="_nextAction">The input that will be processed. This is definitive.</param>
+	/// <param name="_print">Print debug lines for testing purposes.</param>
+	void Update(KeyBind _nextAction, bool _print=false);
 
 	/// <summary>
 	/// Function to start the game in the standard way. No debugs or test prints: Official game start.
 	/// </summary>
 	void StartGame();
+
+	/// <summary>
+	/// Pointer reference to the piece being controlled at the moment.
+	/// </summary>
+	Piece* _activePiece;
 };

@@ -1,7 +1,6 @@
 #include <Piece.h>
 
-
-Piece::Block *Piece::AllocatePiece(Piece::Tetromino tetromino) {
+Piece::Block* Piece::AllocatePiece(Piece::Tetromino tetromino) {
 	// Allocating 4 memory addresses with the size of a block.
 	Piece::Block *array = (Piece::Block*)malloc(4 * sizeof(Piece::Block));
 
@@ -86,8 +85,13 @@ Piece::Block *Piece::AllocatePiece(Piece::Tetromino tetromino) {
 	return array;
 }
 
-Piece::Piece(Piece::Tetromino __tetromino) {
+Piece::Piece(Piece::Tetromino _tetromino) {
 
-	this->_blocks = Piece::AllocatePiece(__tetromino);
-	this->_tetromino = __tetromino;
+	// Starting relative allocation.
+	_blocks = Piece::AllocatePiece(_tetromino);
+	// Sync with board (center)
+	for (int i = 0; i < 4; i++) {
+		//(_blocks + i)->x += gBoardRules.gameWidth / 2;
+	}
+	this->tetromino = _tetromino;
 }
