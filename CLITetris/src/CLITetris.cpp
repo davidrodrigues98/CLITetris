@@ -1,7 +1,6 @@
 ﻿// CLITetris.cpp : Defines the entry point for the application.
 #include <CLITetris.h>
 #include <Game.h>
-#include <Printer.h>
 
 using namespace std;
 
@@ -38,13 +37,12 @@ long win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn, DWORD& _cNumRead, INPUT
 /// <summary>
 /// Processes the game time loop with multi-threading.
 /// </summary>
-/// <returns>0</returns>
+/// <param name="_instance">Current game object.</param>
 void GameUpdater(Game *_instance) {
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
 	INPUT_RECORD irInBuf[INPUT_RECORD_BUFFER_SIZE];
 	DWORD cNumRead;
 	do {
-
 		win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
 		FlushConsoleInputBuffer(hStdIn);
 		_instance->Update(gNextAction);
@@ -53,10 +51,10 @@ void GameUpdater(Game *_instance) {
 }
 
 /// <summary>
-/// Processes the game 
+/// Force the tetromino piece to go "fall" 1 line.
 /// </summary>
-/// <param name="_time_ms"></param>
-/// <param name="_instance"></param>
+/// <param name="_time_ms">Loop time in ms for the process to occur.</param>
+/// <param name="_instance">Current game object.</param>
 void AutoStepDown(int _time_ms, Game* _instance) {
 	do {
 		this_thread::sleep_for(chrono::milliseconds(_time_ms));

@@ -1,13 +1,14 @@
 #include <Printer.h>
 
-std::map<Visuals, const wchar_t> PrintMap = {
-	{BLOCK, L'\u2588'},
-	{EMPTY, L'\u00A0'},
-	{BORDERV, L'\u2551'},
-	{BORDERH, L'\u2550'}
-};
+	Printer::PrintMap Printer::pMap_ = {
+		{ BLOCK, L'\u2588' },
+		{ EMPTY, L'\u00A0' },
+		{ BORDERV, L'\u2551' },
+		{ BORDERH, L'\u2550' },
+		{ NEWLINE, L'\n' }
+	};
 
-int ConsolePrint(Visuals _visual) {
-	wprintf(L"%c", PrintMap[_visual]);
+int Printer::ConsolePrint(Printer::Visuals _visual) {
+	wprintf(L"%c", Printer::pMap_[_visual]);
 	return 0;
 }

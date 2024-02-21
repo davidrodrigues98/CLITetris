@@ -149,18 +149,20 @@ void Game::Update(KeyBind _nextAction, bool _print) {
             ProcessMovement(_nextAction, _print);
             break;
     }
+    system("cls");
+    PrintBoard();
 }
 
 void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
     switch (_nextAction) {
         case KeyBind::DOWN: 
-            wprintf(L"DOWN\n");
+            if(_print) wprintf(L"DOWN\n");
             break;
         case KeyBind::LEFT:
-            wprintf(L"LEFT\n");
+            if(_print) wprintf(L"LEFT\n");
             break;
         case KeyBind::RIGHT:
-            wprintf(L"RIGHT\n");
+            if(_print) wprintf(L"RIGHT\n");
             break;
         case KeyBind::ROTATE_LEFT: break;
         case KeyBind::ROTATE_RIGHT: break;
@@ -168,7 +170,63 @@ void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
 }
 
 void Game::StartGame() {
-    //? while (gGameStatus != OVER) {               // The game cycle starts here.
+    PrepareBoard(true);
     gGameStatus = GameStatus::START;
-    //? }
+}
+
+void Game::PrepareBoard(bool _print) {
+    /* Board size:
+        (2 (Borders) + Width + 1 (Breakline)) -> First line. 
+      + (2 (Borders) + Width + 1 (Breakline) * Height) -> Game Lines.
+      + (2 (Borders) + Width + 1 (Breakline)) -> Last line.
+    */
+    int lineSize = (2 + gBoardRules.gameWidth + 1);
+    int sizeInc = (lineSize * 2)
+                + (lineSize * gBoardRules.gameHeight);
+
+    // Alloc space.
+    _gameBoard = (Printer::Visuals*)malloc(sizeInc * sizeof(Printer::Visuals));
+
+    if (_print) wprintf(L"Allocated memory space.\n");
+
+    // Top border line.
+    for (int i = 0; i < lineSize-1; i++) {
+        _gameBoard[i] = Printer::Visuals::BORDERH;
+    }
+    _gameBoard[lineSize] = Printer::Visuals::NEWLINE;
+
+    if (_print) wprintf(L"Wrote top border line.\n");
+
+    // Loop for the game board.
+    for (int i = 0; i < gBoardRules.gameHeight; i++) {
+        // First border.
+        _gameBoard[lineSize * (i + 1) + 1] = Printer::Visuals::BORDERV;
+        // Blank spaces.
+        for (int j = 2; j < lineSize - 2; j++) {
+            _gameBoard[lineSize * (i + 1) + j] = Printer::Visuals::EMPTY;
+        }
+        // Last border.
+        _gameBoard[lineSize * (i + 1) + lineSize - 1] = Printer::Visuals::BORDERV;
+        // Newline
+        _gameBoard[lineSize * (i + 1) + lineSize] = Printer::Visuals::NEWLINE;
+    }
+
+    if (_print) wprintf(L"Wrote game board.\n");
+
+    // Bottom border line.
+    for (int i = 0; i < lineSize - 1; i++) {
+        _gameBoard[sizeInc - lineSize - 1 + i] = Printer::Visuals::BORDERH;
+    }
+    _gameBoard[sizeInc - 1] = Printer::Visuals::NEWLINE;
+
+    if (_print) wprintf(L"Wrote bottom border line.\n");
+}
+
+void Game::PrintBoard() {
+    int lineSize = (2 + gBoardRules.gameWidth + 1);
+    int sizeInc = (lineSize * 2)
+        + (lineSize * gBoardRules.gameHeight);
+    for (int i = 0; i < sizeInc; i++) {
+        wprintf(L"%c", Printer::pMap_[_gameBoard[i]]);
+    }
 }

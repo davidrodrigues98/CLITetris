@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Piece.h>
+#include <Printer.h>
 
 /// <summary>
 /// Enumerator to process key mapping against the application.
@@ -74,6 +75,17 @@ protected:
 	/// <param name="_print">Print debug lines for testing purposes.</param>
 	void ProcessMovement(KeyBind _nextAction, bool _print=false);
 
+	/// <summary>
+	/// Print the whole game board.
+	/// </summary>
+	void PrintBoard();
+
+	/// <summary>
+	/// Allocates memory for the game board.
+	/// </summary>
+	/// <param name="_print">Print debug lines for testing purposes.</param>
+	void PrepareBoard(bool _print = false);
+
 public:
 
 	/// <summary>
@@ -103,4 +115,6 @@ public:
 	/// Pointer reference to the piece being controlled at the moment.
 	/// </summary>
 	Piece* _activePiece;
+
+	Printer::Visuals* _gameBoard;
 };
