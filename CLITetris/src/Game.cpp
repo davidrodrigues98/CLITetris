@@ -130,7 +130,6 @@ void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
     }
 }
 
-
 Piece::Tetromino TakeFromTetrominoQueue() {
     Piece::Tetromino result = gQueueCurrent->value;
     gQueueCurrent = gQueueCurrent->next;
@@ -146,32 +145,66 @@ void Game::Update(KeyBind _nextAction, bool _print) {
             gGameStatus = GameStatus::MOVE;
             break;
         case GameStatus::MOVE:
+            UpdateBoard(true);
             ProcessMovement(_nextAction, _print);
             break;
     }
-    system("cls");
-    PrintBoard();
+    UpdateBoard();
 }
 
 void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
     switch (_nextAction) {
         case KeyBind::DOWN: 
             if(_print) wprintf(L"DOWN\n");
+            MoveDown();
             break;
         case KeyBind::LEFT:
             if(_print) wprintf(L"LEFT\n");
+            MoveLeft();
             break;
         case KeyBind::RIGHT:
             if(_print) wprintf(L"RIGHT\n");
+            MoveRight();
             break;
         case KeyBind::ROTATE_LEFT: break;
         case KeyBind::ROTATE_RIGHT: break;
     }
 }
 
+void Game::MoveDown() {
+    Piece::Block* blocks = _activePiece->_blocks;
+    for (int i = 0; i < 4; i++) {
+        (blocks + i)->y++;
+    }
+}
+
+void Game::MoveLeft() {
+    Piece::Block* blocks = _activePiece->_blocks;
+    for (int i = 0; i < 4; i++) {
+        (blocks + i)->x--;
+    }
+}
+
+void Game::MoveRight() {
+    Piece::Block* blocks = _activePiece->_blocks;
+    for (int i = 0; i < 4; i++) {
+        (blocks + i)->x++;
+    }
+}
+
 void Game::StartGame() {
     PrepareBoard(true);
     gGameStatus = GameStatus::START;
+}
+
+void Game::UpdateBoard(bool _clear) {
+    Piece::Block* blocks = _activePiece->_blocks;
+    int lineSize = (2 + gBoardRules.gameWidth + 1);
+    for (int i = 0; i < 4; i++) {
+        int x = (blocks+i)->x;
+        int y = (blocks+i)->y;
+        _gameBoard[lineSize + lineSize*y + x + 1] = (!_clear?Printer::Visuals::BLOCK:Printer::Visuals::EMPTY);
+    }
 }
 
 void Game::PrepareBoard(bool _print) {
@@ -202,7 +235,7 @@ void Game::PrepareBoard(bool _print) {
         // First border.
         _gameBoard[lineSize * (i + 1) + 1] = Printer::Visuals::BORDERV;
         // Blank spaces.
-        for (int j = 2; j < lineSize - 2; j++) {
+        for (int j = 2; j < lineSize - 1; j++) {
             _gameBoard[lineSize * (i + 1) + j] = Printer::Visuals::EMPTY;
         }
         // Last border.
@@ -214,8 +247,8 @@ void Game::PrepareBoard(bool _print) {
     if (_print) wprintf(L"Wrote game board.\n");
 
     // Bottom border line.
-    for (int i = 0; i < lineSize - 1; i++) {
-        _gameBoard[sizeInc - lineSize - 1 + i] = Printer::Visuals::BORDERH;
+    for (int i = 0; i < lineSize; i++) {
+        _gameBoard[sizeInc - lineSize + i + 1] = Printer::Visuals::BORDERH;
     }
     _gameBoard[sizeInc - 1] = Printer::Visuals::NEWLINE;
 
@@ -223,10 +256,11 @@ void Game::PrepareBoard(bool _print) {
 }
 
 void Game::PrintBoard() {
+    system("cls");
     int lineSize = (2 + gBoardRules.gameWidth + 1);
     int sizeInc = (lineSize * 2)
         + (lineSize * gBoardRules.gameHeight);
     for (int i = 0; i < sizeInc; i++) {
-        wprintf(L"%c", Printer::pMap_[_gameBoard[i]]);
+        Printer::ConsolePrint(_gameBoard[i]);
     }
 }

@@ -86,12 +86,13 @@ Piece::Block* Piece::AllocatePiece(Piece::Tetromino tetromino) {
 }
 
 Piece::Piece(Piece::Tetromino _tetromino) {
-
+	this->tetromino = _tetromino;
 	// Starting relative allocation.
 	_blocks = Piece::AllocatePiece(_tetromino);
 	// Sync with board (center)
+	int centerX = gBoardRules.gameWidth / 2;
 	for (int i = 0; i < 4; i++) {
-		//(_blocks + i)->x += gBoardRules.gameWidth / 2;
-	}
-	this->tetromino = _tetromino;
+		
+		(_blocks + i)->x += centerX + 1;
+	}	
 }

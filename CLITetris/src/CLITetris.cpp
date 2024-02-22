@@ -46,7 +46,7 @@ void GameUpdater(Game *_instance) {
 		win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
 		FlushConsoleInputBuffer(hStdIn);
 		_instance->Update(gNextAction);
-		
+		_instance->PrintBoard();
 	} while (true); //gTerminateGameUpdaterThread == false);
 }
 

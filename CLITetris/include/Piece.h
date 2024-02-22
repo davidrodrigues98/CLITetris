@@ -41,11 +41,6 @@ public:
 	} Block;
 
 	/// <summary>
-	/// Returns pointer to allocated coordinates from this piece.
-	/// </summary>
-	Block *GetPiece();
-
-	/// <summary>
 	/// Algorithm to rotate the selected tetromino piece in a given direction.
 	/// </summary>
 	/// <param name="_direction">Input direction: LEFT or RIGHT.</param>
@@ -56,6 +51,10 @@ public:
 	/// </summary>
 	Tetromino tetromino;
 	
+	/// <summary>
+	/// Returns pointer to allocated coordinates from this piece.
+	/// </summary>
+	Block* _blocks = NULL;
 protected:
 	/// <summary>
 	/// Accesses memory to allocate the memory addresses and sets the coordinates for each piece block.
@@ -63,6 +62,4 @@ protected:
 	/// <param name="tetromino">: The desired tetromino type.</param>
 	/// <returns>A pointer to the allocated memory.</returns>
 	Block* AllocatePiece(Piece::Tetromino tetromino);
-
-	Block *_blocks = NULL;
 };

@@ -76,17 +76,36 @@ protected:
 	void ProcessMovement(KeyBind _nextAction, bool _print=false);
 
 	/// <summary>
-	/// Print the whole game board.
-	/// </summary>
-	void PrintBoard();
-
-	/// <summary>
 	/// Allocates memory for the game board.
 	/// </summary>
 	/// <param name="_print">Print debug lines for testing purposes.</param>
 	void PrepareBoard(bool _print = false);
 
+	/// <summary>
+	/// Updates game board variable.
+	/// </summary>
+	void UpdateBoard(bool _clear = false);
+
+	/// <summary>
+	/// Moves active piece down.
+	/// </summary>
+	void MoveDown();
+
+	/// <summary>
+	/// Moves active piece left.
+	/// </summary>
+	void MoveLeft();
+
+	/// <summary>
+	/// Moves active piece right.
+	/// </summary>
+	void MoveRight();
+
 public:
+	/// <summary>
+	/// Print the whole game board.
+	/// </summary>
+	void PrintBoard();
 
 	/// <summary>
 	/// Constructor for menu-based parameters.

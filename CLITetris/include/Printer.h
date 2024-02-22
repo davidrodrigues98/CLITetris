@@ -27,13 +27,12 @@ public:
 	/// </summary>
 	static PrintMap pMap_;
 
-
-
-protected:
 	/// <summary>
 	/// Print a single block.
 	/// </summary>
 	/// <param name="_visual">Chosen visual option.</param>
 	/// <returns></returns>
-	int ConsolePrint(Visuals _visual);
+	static int ConsolePrint(Visuals _visual);
+
+
 };
