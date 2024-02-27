@@ -10,11 +10,11 @@ public:
 	/// Interface structure with all the possible printing options.
 	/// </summary>
 	typedef enum Visuals {
-		BLOCK,
-		EMPTY,
-		BORDERV,
-		BORDERH,
-		NEWLINE
+		BLOCK	= 1,
+		EMPTY	= 0,
+		BORDERV	= 10,
+		BORDERH	= 11,
+		NEWLINE = 2
 	} Visuals;
 
 	/// <summary>

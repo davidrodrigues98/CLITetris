@@ -56,10 +56,21 @@ typedef enum GameStatus {
 /// </summary>
 class Game {
 protected:
-	//? vector<Piece> _piece;
+	/// <summary>
+	/// Size of each board line.
+	/// </summary>
+	int _lineSize;
 
 	BoardRules _boardRules;
+	
 	Piece::Tetromino * _tetrominoQueueLL;
+	
+	/// <summary>
+	/// Pointer reference to the piece being controlled at the moment.
+	/// </summary>
+	Piece* _activePiece;
+
+	Printer::Visuals* _gameBoard;
 	
 	/// <summary>
 	/// Function that generates the starting pieces.
@@ -101,6 +112,11 @@ protected:
 	/// </summary>
 	void MoveRight();
 
+	/// <summary>
+	/// Validates the piece movement, given the action performed. This function prevents: Pieces going through border, other pieces or floor.
+	/// </summary>
+	bool ValidateMove(KeyBind _action);
+
 public:
 	/// <summary>
 	/// Print the whole game board.
@@ -129,11 +145,4 @@ public:
 	/// Function to start the game in the standard way. No debugs or test prints: Official game start.
 	/// </summary>
 	void StartGame();
-
-	/// <summary>
-	/// Pointer reference to the piece being controlled at the moment.
-	/// </summary>
-	Piece* _activePiece;
-
-	Printer::Visuals* _gameBoard;
 };

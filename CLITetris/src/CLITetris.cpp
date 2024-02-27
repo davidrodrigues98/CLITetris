@@ -59,7 +59,7 @@ void AutoStepDown(int _time_ms, Game* _instance) {
 	do {
 		this_thread::sleep_for(chrono::milliseconds(_time_ms));
 		// Process the automatic down action of the active piece.
-		_instance->Update(KeyBind::DOWN);
+		//_instance->Update(KeyBind::DOWN);
 	} while (gTerminateAutoStepDownThread == false);
 }
 
