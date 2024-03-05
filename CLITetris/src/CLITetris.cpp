@@ -46,7 +46,6 @@ void GameUpdater(Game *_instance) {
 		win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
 		FlushConsoleInputBuffer(hStdIn);
 		_instance->Update(gNextAction);
-		_instance->PrintBoard();
 	} while (true); //gTerminateGameUpdaterThread == false);
 }
 
@@ -59,8 +58,21 @@ void AutoStepDown(int _time_ms, Game* _instance) {
 	do {
 		this_thread::sleep_for(chrono::milliseconds(_time_ms));
 		// Process the automatic down action of the active piece.
-		//_instance->Update(KeyBind::DOWN);
+		_instance->Update(KeyBind::DOWN);
 	} while (gTerminateAutoStepDownThread == false);
+}
+
+/// <summary>
+/// Thread function responsible for printing game visual input for the user.
+/// </summary>
+/// <param name="_time_ms">Loop time in ms for the process to occur.</param>
+/// <param name="_instance">Current game object.</param>
+void PrintCycle(int _time_ms, Game* _instance) {
+	do {
+		this_thread::sleep_for(chrono::milliseconds(_time_ms));
+		_instance->PrintBoard();
+	} while (true);
+	
 }
 
 void ManageConsoleMode(bool _gameMode) {
@@ -78,7 +90,8 @@ void ManageConsoleMode(bool _gameMode) {
 
 int BeforeInitialize() {
 	int res = 0;
-	_setmode(_fileno(stdout), _O_U8TEXT);
+	//?_setmode(_fileno(stdout), _O_U8TEXT);
+	setlocale(LC_CTYPE, "");
 	res++;
 	return res;
 }
@@ -86,6 +99,9 @@ int BeforeInitialize() {
 int devInitialize() {
 	// Configures CLI
 	ManageConsoleMode(true);
+
+	// Initializes the screen, sets up memory and clears the screen.
+	WINDOW *win = initscr();
 
 	// Starts new game object.
 	Game* gameInstance = new Game(true);
@@ -98,12 +114,14 @@ int devInitialize() {
 	// Start threads.
 	threads.push_back(thread(AutoStepDown, 500, gameInstance));
 	threads.push_back(thread(GameUpdater, gameInstance));
+	threads.push_back(thread(PrintCycle, 50, gameInstance));
 
 	// Join them.
 	for (auto& thread : threads) {
 		thread.join();
 	}
 
+	endwin();
 	return 0;
 }
 

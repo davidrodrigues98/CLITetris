@@ -61,6 +61,8 @@ protected:
 	/// </summary>
 	int _lineSize;
 
+	Printer::Visuals* _gameBoard;
+
 	BoardRules _boardRules;
 	
 	Piece::Tetromino * _tetrominoQueueLL;
@@ -70,7 +72,6 @@ protected:
 	/// </summary>
 	Piece* _activePiece;
 
-	Printer::Visuals* _gameBoard;
 	
 	/// <summary>
 	/// Function that generates the starting pieces.
@@ -145,4 +146,6 @@ public:
 	/// Function to start the game in the standard way. No debugs or test prints: Official game start.
 	/// </summary>
 	void StartGame();
+
+
 };

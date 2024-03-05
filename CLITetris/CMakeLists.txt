@@ -19,3 +19,15 @@ add_executable (
 	"include/Printer.h"
 	"src/Printer.cpp" "include/Global.h")
 # TODO: Add tests and install targets if needed.
+
+
+find_path(PDCURSES_INCLUDE curses.h)
+find_library(PDCURSES_LIBRARY pdcurses)
+
+target_include_directories(
+	CLITetris PRIVATE ${PDCURSES_INCLUDE}
+)
+
+target_link_libraries(
+	CLITetris PRIVATE ${PDCURSES_LIBRARY} 
+)

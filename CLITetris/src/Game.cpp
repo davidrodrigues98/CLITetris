@@ -12,9 +12,9 @@ KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
     // Virtual key mapping.
     switch (recordedKeyCode)
     {
-    case 37: result = LEFT; /*wprintf(L"LEFT\n")*/; break;
+    case 37: result = LEFT; break;
         //? case 38: result = UP;  break;
-    case 39: result = RIGHT; /*wprintf(L"RIGHT\n")*/; break;
+    case 39: result = RIGHT; break;
         //? case 40: result = DOWN; break;
     }
 
@@ -157,16 +157,16 @@ void Game::Update(KeyBind _nextAction, bool _print) {
 void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
     switch (_nextAction) {
         case KeyBind::DOWN: 
-            if(_print) wprintf(L"DOWN\n");
-            MoveDown();
+            if (ValidateMove(_nextAction)) {
+                if (_print) wprintf(L"DOWN\n");
+                MoveDown();
+            }
             break;
         case KeyBind::LEFT:
             if (ValidateMove(_nextAction)) {
                 if (_print) wprintf(L"LEFT\n");
                 MoveLeft();
             }
-            else
-                system("pause");
             break;
         case KeyBind::RIGHT:
             if (ValidateMove(_nextAction)) {
@@ -189,6 +189,8 @@ bool Game::ValidateMove(KeyBind _action) {
         case KeyBind::RIGHT:
             nX = 1;
         break;
+        case KeyBind::DOWN:
+            nY = 1;
         default:break;
     }
     for (int i = 0; i < 4; i++) {
@@ -197,7 +199,7 @@ bool Game::ValidateMove(KeyBind _action) {
 
         // Condition logic: Visual enumerator >10 means that it is a border.
         Printer::Visuals cell = _gameBoard[_lineSize + _lineSize * (y + nY) + x + nX];
-        if (cell >= 10 || cell == Printer::Visuals::BLOCK)
+        if (cell >= 10)
             return false;
     }
     return true;
@@ -234,7 +236,7 @@ void Game::UpdateBoard(bool _clear) {
     for (int i = 0; i < 4; i++) {
         int x = (blocks+i)->x;
         int y = (blocks+i)->y;
-        _gameBoard[_lineSize + _lineSize*y + x + 1] = (!_clear?Printer::Visuals::BLOCK:Printer::Visuals::EMPTY);
+        _gameBoard[_lineSize + _lineSize*y + x] = (!_clear?Printer::Visuals::BLOCK:Printer::Visuals::EMPTY);
     }
 }
 
@@ -283,9 +285,22 @@ void Game::PrepareBoard(bool _print) {
 }
 
 void Game::PrintBoard() {
-    system("cls");
+ 
+    // Clear screen.
+    clear();
     int sizeInc = _lineSize * gBoardRules.gameHeight;
+    int y = 0, x=0;
+
     for (int i = 0; i < sizeInc; i++) {
-        Printer::ConsolePrint(_gameBoard[i]);
+        if (_gameBoard[i] == Printer::Visuals::NEWLINE) {
+            y++;
+            x = 0;
+        }
+        else
+        {
+            mvaddch(y, x, Printer::pMap_[_gameBoard[i]]);
+            x++;
+        }
     }
+    refresh();
 }

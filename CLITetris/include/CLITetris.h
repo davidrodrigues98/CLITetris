@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <chrono>
 #include <thread>
+#include <curses.h>
 
 #include <Global.h>
 

@@ -14,6 +14,7 @@ public:
 		EMPTY	= 0,
 		BORDERV	= 10,
 		BORDERH	= 11,
+		BLOCKPLACED = 12,
 		NEWLINE = 2
 	} Visuals;
 
@@ -26,13 +27,5 @@ public:
 	/// Static print translator.
 	/// </summary>
 	static PrintMap pMap_;
-
-	/// <summary>
-	/// Print a single block.
-	/// </summary>
-	/// <param name="_visual">Chosen visual option.</param>
-	/// <returns></returns>
-	static int ConsolePrint(Visuals _visual);
-
 
 };
