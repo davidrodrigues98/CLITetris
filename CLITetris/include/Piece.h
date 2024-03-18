@@ -5,6 +5,7 @@
 class Piece {
 
 public:
+
 	/// <summary>
 	/// Enumerating tetromino type codes to instance the piece.
 	/// </summary>
@@ -17,6 +18,15 @@ public:
 		S,
 		Z
 	} Tetromino;
+
+	/// <summary>
+	/// Bidimensional coordinate structure. Each piece has 4.
+	/// </summary>
+	typedef struct Block {
+		int x = -1;
+		int y = -1;
+		Block(int a, int b) : x(a), y(b) {}
+	} Block;
 
 	/// <summary>
 	/// Simple enumerator to simplify rotation input.
@@ -32,13 +42,7 @@ public:
 	/// <param name="_tetromino">: The desired tetromino type.</param>
 	Piece(Tetromino _tetromino);
 
-	/// <summary>
-	/// Bidimensional coordinate structure. Each piece has 4.
-	/// </summary>
-	typedef struct Block {
-		int x = -1;
-		int y = -1;
-	} Block;
+
 
 	/// <summary>
 	/// Algorithm to rotate the selected tetromino piece in a given direction.

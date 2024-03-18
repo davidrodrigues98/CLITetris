@@ -27,6 +27,9 @@ Game::Game(bool _doubleBag, bool _print) {
     gGameStatus = START;
     // Calc size of each line.
     _lineSize = gBoardRules.gameWidth;
+
+    //Make a dynamic rotate mask load.
+
 }
 
 void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
@@ -304,3 +307,31 @@ void Game::PrintBoard() {
     }
     refresh();
 }
+
+
+
+std::map<int, Piece::Block[4]> CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
+    std::map<int, Piece::Block[4]> tmpMap;
+    typedef std::pair<int, Piece::Block*> MapValue;
+    switch (_tetromino)
+    {
+    case Piece::L:
+        break;
+    case Piece::J:
+        break;
+    case Piece::I:
+        //Piece::Block r0[4] = {{0,0}, {0,0}, {0,0}, {0,0}};
+        //MapValue mv = { 0, r0 };
+        break;
+    case Piece::T:
+        break;
+    case Piece::S:
+        break;
+    case Piece::Z:
+        break;
+    default:
+        break;
+    }
+    return tmpMap;
+}
+

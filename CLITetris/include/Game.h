@@ -32,6 +32,18 @@ typedef struct TetrominoNode {
 	TetrominoNode* next;
 } TetrominoNode;
 
+
+typedef struct TetrominoRotateNode {
+	TetrominoRotateNode* prev;
+	TetrominoRotateNode* next;
+	Piece::Block relativeCoordinates[4];
+} TetrominoRotateNode;
+
+/// <summary>
+/// Structure designed to store the rotation masks for each tetromino. 
+/// </summary>
+typedef std::map<Piece::Tetromino, TetrominoRotateNode> TetrominoRotateMask;
+
 /// <summary>
 /// Statistics and Game Score.
 /// </summary>
@@ -117,6 +129,13 @@ protected:
 	/// Validates the piece movement, given the action performed. This function prevents: Pieces going through border, other pieces or floor.
 	/// </summary>
 	bool ValidateMove(KeyBind _action);
+
+	/// <summary>
+	/// Auxiliary function to help load rotation masks into the main map.
+	/// </summary>
+	/// <param name="_tetromino">Selected tetromino.</param>
+	/// <returns>Map with the possible rotate positions to be inserted into the main map.</returns>
+	std::map<int, Piece::Block[4]> CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
 
 public:
 	/// <summary>
