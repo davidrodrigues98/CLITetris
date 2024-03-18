@@ -2,6 +2,7 @@
 using namespace std;
 
 TetrominoNode *gQueueHead, *gQueueTail, *gQueueCurrent;
+TetrominoRotateNode *gRotateHead, *gRotateTail, *gRotateCurrent;
 GameStatus gGameStatus;
 
 KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
@@ -310,9 +311,7 @@ void Game::PrintBoard() {
 
 
 
-std::map<int, Piece::Block[4]> CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
-    std::map<int, Piece::Block[4]> tmpMap;
-    typedef std::pair<int, Piece::Block*> MapValue;
+TetrominoRotateNode* CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
     switch (_tetromino)
     {
     case Piece::L:
@@ -320,8 +319,23 @@ std::map<int, Piece::Block[4]> CreateRotateMaskForTetromino(Piece::Tetromino _te
     case Piece::J:
         break;
     case Piece::I:
-        //Piece::Block r0[4] = {{0,0}, {0,0}, {0,0}, {0,0}};
-        //MapValue mv = { 0, r0 };
+
+        gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block rel[4] = {
+            {1,2},{3,4},{5,6},{7,8}
+        };
+        gRotateTail->relativeCoordinates = rel;
+        gRotateTail->next = gRotateHead;
+        gRotateTail->prev = gRotateHead;
+
+        gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block rel[4] = {
+            {1,2},{3,4},{5,6},{7,8}
+        };
+        gRotateHead->relativeCoordinates = rel;
+        gRotateHead->next = gRotateTail;
+        gRotateHead->prev = gRotateTail;
+
         break;
     case Piece::T:
         break;
@@ -332,6 +346,6 @@ std::map<int, Piece::Block[4]> CreateRotateMaskForTetromino(Piece::Tetromino _te
     default:
         break;
     }
-    return tmpMap;
+    return ;
 }
 

@@ -32,17 +32,14 @@ typedef struct TetrominoNode {
 	TetrominoNode* next;
 } TetrominoNode;
 
-
+/// <summary>
+/// Structure designed to represent doubly linked list to store tetromino rotation relative coordinates. 
+/// </summary>
 typedef struct TetrominoRotateNode {
 	TetrominoRotateNode* prev;
 	TetrominoRotateNode* next;
-	Piece::Block relativeCoordinates[4];
+	Piece::Block *relativeCoordinates; //max +3
 } TetrominoRotateNode;
-
-/// <summary>
-/// Structure designed to store the rotation masks for each tetromino. 
-/// </summary>
-typedef std::map<Piece::Tetromino, TetrominoRotateNode> TetrominoRotateMask;
 
 /// <summary>
 /// Statistics and Game Score.
@@ -77,7 +74,8 @@ protected:
 
 	BoardRules _boardRules;
 	
-	Piece::Tetromino * _tetrominoQueueLL;
+	Piece::Tetromino *_tetrominoQueueLL;
+	TetrominoRotateNode* _tetrominoRotateMask;
 	
 	/// <summary>
 	/// Pointer reference to the piece being controlled at the moment.
@@ -135,7 +133,7 @@ protected:
 	/// </summary>
 	/// <param name="_tetromino">Selected tetromino.</param>
 	/// <returns>Map with the possible rotate positions to be inserted into the main map.</returns>
-	std::map<int, Piece::Block[4]> CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
+	TetrominoRotateNode* CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
 
 public:
 	/// <summary>

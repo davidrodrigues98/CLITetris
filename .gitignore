@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Manually Inserted - CMakeSettings File because I use 2 PCs to code, each one with different directories.
+CMakeSettings.json

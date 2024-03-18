@@ -1,15 +1,27 @@
 ﻿{
   "configurations": [
     {
-      "name": "x64-Debug",
+      "name": "x86-Debug",
       "generator": "Ninja",
       "configurationType": "Debug",
-      "inheritEnvironments": [ "msvc_x86" ],
       "buildRoot": "${projectDir}\\out\\build\\${name}",
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "msvc_x86" ],
+      "variables": [
+        {
+          "name": "PDCURSES_INCLUDE",
+          "value": "E:/vcpkg/vcpkg/packages/pdcurses_x86-windows/include",
+          "type": "PATH"
+        },
+        {
+          "name": "PDCURSES_LIBRARY",
+          "value": "E:/vcpkg/vcpkg/packages/pdcurses_x86-windows/lib/pdcurses.lib",
+          "type": "FILEPATH"
+        }
+      ]
     }
   ]
 }
