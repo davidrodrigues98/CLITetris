@@ -22,7 +22,7 @@
 #pragma region Global macro definitions.
 // Tetromino queue size of array.
 #define TETRO_QUEUE_SIZE 7
-#define INPUT_RECORD_BUFFER_SIZE 20
+#define INPUT_RECORD_BUFFER_SIZE 128
 #define stringify( name ) # name
 #pragma endregion
 

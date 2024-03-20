@@ -23,8 +23,8 @@ public:
 	/// Bidimensional coordinate structure. Each piece has 4.
 	/// </summary>
 	typedef struct Block {
-		int x = -1;
-		int y = -1;
+		int x;
+		int y;
 		Block(int a, int b) : x(a), y(b) {}
 	} Block;
 
@@ -42,8 +42,6 @@ public:
 	/// <param name="_tetromino">: The desired tetromino type.</param>
 	Piece(Tetromino _tetromino);
 
-
-
 	/// <summary>
 	/// Algorithm to rotate the selected tetromino piece in a given direction.
 	/// </summary>
@@ -60,10 +58,19 @@ public:
 	/// </summary>
 	Block* _blocks = NULL;
 protected:
+
 	/// <summary>
 	/// Accesses memory to allocate the memory addresses and sets the coordinates for each piece block.
 	/// </summary>
 	/// <param name="tetromino">: The desired tetromino type.</param>
 	/// <returns>A pointer to the allocated memory.</returns>
-	Block* AllocatePiece(Piece::Tetromino tetromino);
+	Block* AllocatePiece(Tetromino tetromino);
+
+	/// <summary>
+	/// Defines the origin property depending on the tetromino.
+	/// </summary>
+	/// <param name="tetromino"></param>
+	/// <returns>_origin property.</returns>
+	int DefineOrigin(Tetromino tetromino);
+
 };

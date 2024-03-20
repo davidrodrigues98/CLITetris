@@ -5,6 +5,278 @@ TetrominoNode *gQueueHead, *gQueueTail, *gQueueCurrent;
 TetrominoRotateNode *gRotateHead, *gRotateTail, *gRotateCurrent;
 GameStatus gGameStatus;
 
+void CreateDoublyLinkedListPointer(
+    Piece::Block _r0p[4],
+    Piece::Block _r0n[4],
+    Piece::Block _r1p[4],
+    Piece::Block _r1n[4],
+    Piece::Block _r2p[4],
+    Piece::Block _r2n[4],
+    Piece::Block _r3p[4],
+    Piece::Block _r3n[4]
+)
+{
+    //r0 Original Position
+    gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+    gRotateTail->relativeCoordinatesPrev = _r0p;
+    gRotateTail->relativeCoordinatesNext = _r0n;
+    gRotateTail->prev = gRotateHead;
+
+    //r1
+    TetrominoRotateNode* aux = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+    aux->relativeCoordinatesPrev = _r1p;
+    aux->relativeCoordinatesNext = _r1n;
+    gRotateTail->next = aux;
+    aux->prev = gRotateTail;
+    TetrominoRotateNode* aux2 = aux;
+    aux = aux->next;
+
+    //r2
+    aux = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+    aux->relativeCoordinatesPrev = _r2p;
+    aux->relativeCoordinatesNext = _r2n;
+    aux->prev = aux2;
+
+    //r3
+    gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+    gRotateHead->relativeCoordinatesPrev = _r3p;
+    gRotateHead->relativeCoordinatesNext = _r3n;
+    aux->next = gRotateHead;
+    gRotateHead->prev = aux;
+    gRotateHead->next = gRotateTail;
+
+    gRotateCurrent = gRotateTail;
+}
+
+void CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
+
+    switch (_tetromino)
+    {
+    case Piece::L: {
+        Piece::Block lr0p[4] =
+        {
+            { -1, 0 }, { 0,1 }, { 1,2 }, { 2,1 }
+        };
+        Piece::Block lr0n[4] =
+        {
+            {0,-2},{-1,-1},{-2,0},{-1,1}
+        };
+        Piece::Block lr1p[4] =
+        {
+            {-2,-1},{-1,0},{0,1},{1,0}
+        };
+        Piece::Block lr1n[4] =
+        {
+            {0,-2},{-1,-1},{-2,0},{-1,1}
+        };
+        Piece::Block lr2p[4] =
+        {
+            {1,-1},{0,0},{-1,1},{0,2}
+        };
+        Piece::Block lr2n[4] =
+        {
+            {2,1},{1,0},{0,-1},{-1,0}
+        };
+        Piece::Block lr3p[4] =
+        {
+            {1,0},{0,-1},{-1,-2},{-2,-1}
+        };
+        Piece::Block lr3n[4] =
+        {
+            {1,1},{0,0},{1,-1},{0,-2}
+        };
+        CreateDoublyLinkedListPointer(lr0p, lr0n, lr1p, lr1n, lr2p, lr2n, lr3p, lr3n);
+        break;
+    }
+    case Piece::J: {
+        Piece::Block jr0p[4] =
+        {
+            { 1, 2 }, { 0,1 }, { -1,0 }, { 0,-1 }
+        };
+        Piece::Block jr0n[4] =
+        {
+            {0,0},{1,1},{0,2},{-1,1}
+        };
+        Piece::Block jr1p[4] =
+        {
+            {-2,0},{-1,-1},{0,-2},{1,-1}
+        };
+        Piece::Block jr1n[4] =
+        {
+            {0,1},{-1,0},{1,0},{2,1}
+        };
+        Piece::Block jr2p[4] =
+        {
+            {0,-1},{1,0},{2,1},{1,2}
+        };
+        Piece::Block jr2n[4] =
+        {
+            {-1,1},{0,0},{1,-1},{2,0}
+        };
+        Piece::Block jr3p[4] =
+        {
+            {1,-1},{0,0},{-1,1},{-2,0}
+        };
+        Piece::Block jr3n[4] =
+        {
+            {-1,-2},{0,-1},{0,-1},{1,-2}
+        };
+        CreateDoublyLinkedListPointer(jr0p, jr0n, jr1p, jr1n, jr2p, jr2n, jr3p, jr3n);
+        break;
+    }
+    case Piece::I: {
+
+        // r1
+        gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block ir1[4] = {
+            {0,0},{-1,1},{-2,2},{-3,3}
+        };
+        gRotateTail->relativeCoordinatesPrev = ir1;
+        gRotateTail->relativeCoordinatesNext = ir1;
+        gRotateTail->next = gRotateHead;
+        gRotateTail->prev = gRotateHead;
+
+        // r0 Original position.
+        gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block ir0[4] = {
+            {0,0},{1,-1},{2,-2},{3,-3}
+        };
+        gRotateHead->relativeCoordinatesPrev = ir0;
+        gRotateHead->relativeCoordinatesNext = ir0;
+        gRotateHead->next = gRotateTail;
+        gRotateHead->prev = gRotateTail;
+        gRotateCurrent = gRotateHead;
+
+        break;
+    }
+    case Piece::T: {
+        Piece::Block tr0p[4] =
+        {
+            {-1, 1}, {0,0}, {1,-1}, {1,-1}
+        };
+        Piece::Block tr0n[4] =
+        {
+            {0, 1}, {1, 0}, {0, -1}, {2, -1}
+        };
+        Piece::Block tr1p[4] =
+        {
+            {0, -1}, {1, 0}, {0, 1}, {2, 1}
+        };
+        Piece::Block tr1n[4] =
+        {
+            {0, 0}, {-1, 1}, {0, 0}, {-2, 2}
+        };
+        Piece::Block tr2p[4] =
+        {
+            {0, -1}, {1, -1}, {0, 0}, {2, -2}
+        };
+        Piece::Block tr2n[4] =
+        {
+            {-1, 0}, {0, -1}, {1, 0}, {1, -2}
+        };
+        Piece::Block tr3p[4] =
+        {
+            {1, 0}, {0, 1}, {-1, 0}, {-1, 2}
+        };
+        Piece::Block tr3n[4] =
+        {
+            {1, -1}, {0, 0}, {-1, 1}, {-1, 1}
+        };
+        CreateDoublyLinkedListPointer(tr0p, tr0n, tr1p, tr1n, tr2p, tr2n, tr3p, tr3n);
+        break;
+    }
+    case Piece::S: {
+        // r1
+        gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block sr1[4] = {
+            {0,-1},{-1,0},{0,1},{-1,2}
+        };
+        gRotateTail->relativeCoordinatesPrev = sr1;
+        gRotateTail->relativeCoordinatesNext = sr1;
+        gRotateTail->next = gRotateHead;
+        gRotateTail->prev = gRotateHead;
+
+        // r0 Original position.
+        gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block sr0[4] = {
+            {0,1},{1,0},{0,-1},{1,-2}
+        };
+        gRotateHead->relativeCoordinatesPrev = sr0;
+        gRotateHead->relativeCoordinatesNext = sr0;
+        gRotateHead->next = gRotateTail;
+        gRotateHead->prev = gRotateTail;
+        gRotateCurrent = gRotateHead;
+        break;
+    }
+    case Piece::Z: {
+        // r1
+        gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block zr1[4] = {
+            {1,0},{0,1},{-1,0},{-2,1}
+        };
+        gRotateTail->relativeCoordinatesPrev = zr1;
+        gRotateTail->relativeCoordinatesNext = zr1;
+        gRotateTail->next = gRotateHead;
+        gRotateTail->prev = gRotateHead;
+
+        // r0 Original position.
+        gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block zr0[4] = {
+            {-1,0},{0,-1},{1,0},{2,-1}
+        };
+        gRotateHead->relativeCoordinatesPrev = zr0;
+        gRotateHead->relativeCoordinatesNext = zr0;
+        gRotateHead->next = gRotateTail;
+        gRotateHead->prev = gRotateTail;
+        gRotateCurrent = gRotateHead;
+        break;
+    }
+    case Piece::O: { // Special case, loop into same node with empty value to still validate the rotation for a square.
+        gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
+        Piece::Block dummyR[4] = {
+            {0,0},{0,0},{0,0},{0,0}
+        };
+        gRotateHead->relativeCoordinatesNext = dummyR;
+        gRotateHead->relativeCoordinatesPrev = dummyR;
+        gRotateTail = gRotateHead;
+        gRotateHead->prev = gRotateHead;
+        gRotateHead->next = gRotateHead;
+        gRotateCurrent = gRotateHead;
+        break;
+    }
+    default:
+        throw std::invalid_argument("Invalid enumerator argument given when creating a new Piece instance.");
+        break;
+
+    }
+}
+
+
+
+void Game::RotatePiece(Piece::PieceBlockRotation _direction) {
+    if (_direction == Piece::PieceBlockRotation::RIGHT)
+    {
+        gRotateCurrent = gRotateCurrent->next;
+        for (int i = 0; i < 4; i++) {
+            Piece::Block* blocks = _activePiece->_blocks;
+            Piece::Block* relative = gRotateCurrent->relativeCoordinatesNext;
+            (blocks + i)->x += (relative + i)->x;
+            (blocks + i)->y += (relative + i)->y;
+        }
+    }
+    else {
+        gRotateCurrent = gRotateCurrent->prev;
+        for (int i = 0; i < 4; i++) {
+            Piece::Block* blocks = _activePiece->_blocks; 
+            Piece::Block* relative = gRotateCurrent->relativeCoordinatesPrev;
+            (blocks + i)->x += (relative + i)->x;
+            (blocks + i)->y += (relative + i)->y;
+            wprintf(L"[%i %i] ", (blocks + i)->x, (blocks + i)->y);
+        }
+        wprintf(L"\n");
+    }
+}
+
 KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
 {
     WORD recordedKeyCode = ker.wVirtualKeyCode;
@@ -13,10 +285,11 @@ KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
     // Virtual key mapping.
     switch (recordedKeyCode)
     {
-    case 37: result = LEFT; break;
-        //? case 38: result = UP;  break;
-    case 39: result = RIGHT; break;
+        case 37: result = LEFT;         break;
+        case 38: result = ROTATE_RIGHT; break;
+        case 39: result = RIGHT;        break;
         //? case 40: result = DOWN; break;
+        default: result = IDLE;         break;
     }
 
     return result;
@@ -146,6 +419,7 @@ void Game::Update(KeyBind _nextAction, bool _print) {
     switch (gGameStatus) {
         case GameStatus::START: 
             _activePiece = new Piece(TakeFromTetrominoQueue());
+            CreateRotateMaskForTetromino(_activePiece->tetromino);
             if(_print) 
                 wprintf(L"%i\n", _activePiece->tetromino);
             gGameStatus = GameStatus::MOVE;
@@ -179,7 +453,9 @@ void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
             }
             break;
         case KeyBind::ROTATE_LEFT: break;
-        case KeyBind::ROTATE_RIGHT: break;
+        case KeyBind::ROTATE_RIGHT: 
+            RotatePiece(Piece::PieceBlockRotation::RIGHT);
+            break;
     }
 }
 
@@ -251,7 +527,7 @@ void Game::PrepareBoard(bool _print) {
     // Alloc space.
     _gameBoard = (Printer::Visuals*)malloc(sizeInc * sizeof(Printer::Visuals));
 
-    wprintf(L"%i", sizeInc);
+    if (_print) wprintf(L"Board size: %i.\n", sizeInc);
 
     if (_print) wprintf(L"Allocated memory space.\n");
 
@@ -309,43 +585,4 @@ void Game::PrintBoard() {
     refresh();
 }
 
-
-
-TetrominoRotateNode* CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
-    switch (_tetromino)
-    {
-    case Piece::L:
-        break;
-    case Piece::J:
-        break;
-    case Piece::I:
-
-        gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-        Piece::Block rel[4] = {
-            {1,2},{3,4},{5,6},{7,8}
-        };
-        gRotateTail->relativeCoordinates = rel;
-        gRotateTail->next = gRotateHead;
-        gRotateTail->prev = gRotateHead;
-
-        gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-        Piece::Block rel[4] = {
-            {1,2},{3,4},{5,6},{7,8}
-        };
-        gRotateHead->relativeCoordinates = rel;
-        gRotateHead->next = gRotateTail;
-        gRotateHead->prev = gRotateTail;
-
-        break;
-    case Piece::T:
-        break;
-    case Piece::S:
-        break;
-    case Piece::Z:
-        break;
-    default:
-        break;
-    }
-    return ;
-}
 

@@ -38,7 +38,8 @@ typedef struct TetrominoNode {
 typedef struct TetrominoRotateNode {
 	TetrominoRotateNode* prev;
 	TetrominoRotateNode* next;
-	Piece::Block *relativeCoordinates; //max +3
+	Piece::Block *relativeCoordinatesPrev; //max +3
+	Piece::Block* relativeCoordinatesNext; //max +3
 } TetrominoRotateNode;
 
 /// <summary>
@@ -75,7 +76,7 @@ protected:
 	BoardRules _boardRules;
 	
 	Piece::Tetromino *_tetrominoQueueLL;
-	TetrominoRotateNode* _tetrominoRotateMask;
+	//? TetrominoRotateNode* _tetrominoRotateMask;
 	
 	/// <summary>
 	/// Pointer reference to the piece being controlled at the moment.
@@ -128,13 +129,16 @@ protected:
 	/// </summary>
 	bool ValidateMove(KeyBind _action);
 
+	void RotatePiece(Piece::PieceBlockRotation _direction);
+
+	/* //?
 	/// <summary>
 	/// Auxiliary function to help load rotation masks into the main map.
 	/// </summary>
 	/// <param name="_tetromino">Selected tetromino.</param>
 	/// <returns>Map with the possible rotate positions to be inserted into the main map.</returns>
 	TetrominoRotateNode* CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
-
+	*/
 public:
 	/// <summary>
 	/// Print the whole game board.

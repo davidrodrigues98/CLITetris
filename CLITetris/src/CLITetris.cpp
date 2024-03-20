@@ -8,30 +8,28 @@ DWORD gFdwMode, gFdwOldMode;
 
 // Flags and structures that will be used in multiple threads.
 atomic<bool> gTerminateGameUpdaterThread(false), gTerminateAutoStepDownThread(false);//, gGameUpdaterInputEnabled(false);
-atomic<KeyBind> gNextAction(IDLE);
 
-long win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn, DWORD& _cNumRead, INPUT_RECORD(&_irInBuf)[INPUT_RECORD_BUFFER_SIZE]) {
-	long result = WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S */ 500);
-	switch(result)
+KeyBind win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn) {
+	//long result = WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S */ 500);
+	//switch(result)
+	//{
+	//case WAIT_OBJECT_0:
+	INPUT_RECORD irInBuf[INPUT_RECORD_BUFFER_SIZE];
+	DWORD cNumRead;
+	if (ReadConsoleInput(
+		_hStdIn,
+		irInBuf,
+		128,
+		&cNumRead
+	)) 
 	{
-	case WAIT_OBJECT_0:
-		ReadConsoleInput(
-			_hStdIn,
-			_irInBuf,
-			INPUT_RECORD_BUFFER_SIZE,
-			&_cNumRead
-		);
-		if (_irInBuf[_cNumRead - 1].Event.KeyEvent.bKeyDown)
-			gNextAction = KeyEventProc(_irInBuf[_cNumRead - 1].Event.KeyEvent);
-		break;
-	case WAIT_TIMEOUT:
-		gNextAction = IDLE;
-		break;
-	default:
-		gNextAction = IDLE;
-		break;
-	};
-	return result;
+		for (int i = 0; i < cNumRead; i++) {
+			if (irInBuf[i].EventType == KEY_EVENT && irInBuf[i].Event.KeyEvent.bKeyDown) {
+				return KeyEventProc(irInBuf[i].Event.KeyEvent);
+			}
+		}
+	}
+	return IDLE;
 }
 
 /// <summary>
@@ -40,12 +38,9 @@ long win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn, DWORD& _cNumRead, INPUT
 /// <param name="_instance">Current game object.</param>
 void GameUpdater(Game *_instance) {
 	HANDLE hStdIn = GetStdHandle(STD_INPUT_HANDLE);
-	INPUT_RECORD irInBuf[INPUT_RECORD_BUFFER_SIZE];
-	DWORD cNumRead;
 	do {
-		win32_TimeStep(_instance, hStdIn, cNumRead, irInBuf);
-		FlushConsoleInputBuffer(hStdIn);
-		_instance->Update(gNextAction);
+		KeyBind nextAction = win32_TimeStep(_instance, hStdIn);
+		_instance->Update(nextAction);
 	} while (true); //gTerminateGameUpdaterThread == false);
 }
 
@@ -81,7 +76,7 @@ void ManageConsoleMode(bool _gameMode) {
 		DWORD cNumRead;
 		GetConsoleMode(hStdIn, &gFdwOldMode);
 		// disable mouse and window input
-		gFdwMode = ENABLE_INSERT_MODE || ENABLE_WINDOW_INPUT;
+		gFdwMode = ENABLE_INSERT_MODE;
 		SetConsoleMode(hStdIn, gFdwMode);
 	}
 	else
@@ -101,7 +96,7 @@ int devInitialize() {
 	ManageConsoleMode(true);
 
 	// Initializes the screen, sets up memory and clears the screen.
-	WINDOW *win = initscr();
+	//WINDOW *win = initscr();
 
 	// Starts new game object.
 	Game* gameInstance = new Game(true);
@@ -114,7 +109,7 @@ int devInitialize() {
 	// Start threads.
 	threads.push_back(thread(AutoStepDown, 500, gameInstance));
 	threads.push_back(thread(GameUpdater, gameInstance));
-	threads.push_back(thread(PrintCycle, 50, gameInstance));
+	//threads.push_back(thread(PrintCycle, 50, gameInstance));
 
 	// Join them.
 	for (auto& thread : threads) {

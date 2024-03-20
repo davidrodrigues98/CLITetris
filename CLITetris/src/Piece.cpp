@@ -1,80 +1,85 @@
 #include <Piece.h>
 
+int Piece::DefineOrigin(Piece::Tetromino _tetromino) {
+	int origin;
+	switch (_tetromino)
+	{
+	case Piece::O:
+		origin = -1; // -1 equals no rotation.
+		break;
+	case Piece::L:
+		origin = 1;
+		break;
+	case Piece::J:
+		origin = 2;
+		break;
+	case Piece::I:
+		origin = 1;
+		break;
+	case Piece::T:
+		origin = 2;
+		break;
+	case Piece::S:
+		origin = 1;
+		break;
+	case Piece::Z:
+		origin = 2;
+		break;
+	default:
+		throw std::invalid_argument("Invalid enumerator argument given when creating a new Piece instance.");
+		break;
+	}
+	return origin;
+}
+
 Piece::Block* Piece::AllocatePiece(Piece::Tetromino tetromino) {
 	// Allocating 4 memory addresses with the size of a block.
-	Piece::Block *array = (Piece::Block*)malloc(4 * sizeof(Piece::Block));
+	Piece::Block* array = (Piece::Block*)malloc(4 * sizeof(Piece::Block));
 
 #pragma region Tetromino coordinates assignment
+	// { x, y }
 	switch (tetromino) {
 	case Piece::Tetromino::O:
-		array[0].x = 0;
-		array[0].y = 0;
-		array[1].x = 1;
-		array[1].y = 0;
-		array[2].x = 0;
-		array[2].y = 1;
-		array[3].x = 1;
-		array[3].y = 1;
+		array[0] = { 0, 0 };
+		array[1] = { 1, 0 };
+		array[2] = { 0, 1 };
+		array[3] = { 1, 1 };
 		break;
 	case Piece::Tetromino::I:
-		array[0].x = 0;
-		array[0].y = 0;
-		array[1].x = 1;
-		array[1].y = 0;
-		array[2].x = 2;
-		array[2].y = 0;
-		array[3].x = 3;
-		array[3].y = 0;
+		array[0] = { 0, 0 };
+		array[1] = { 1, 0 };
+		array[2] = { 2, 0 };
+		array[3] = { 3, 0 };
 		break;
 	case Piece::Tetromino::L:
-		array[0].x = 0;
-		array[0].y = 1;
-		array[1].x = 1;
-		array[1].y = 1;
-		array[2].x = 2;
-		array[2].y = 1;
-		array[3].x = 2;
-		array[3].y = 0;
+		array[0] = { 0, 1 };
+		array[1] = { 1, 1 };
+		array[2] = { 2, 1 };
+		array[3] = { 2, 0 };
 		break;
 	case Piece::Tetromino::J:
-		array[0].x = 0;
-		array[0].y = 0;
-		array[1].x = 0;
-		array[1].y = 1;
-		array[2].x = 1;
-		array[2].y = 1;
-		array[3].x = 2;
-		array[3].y = 1;
+		array[0] = { 0, 0 };
+		array[1] = { 0, 1 };
+		array[2] = { 1, 1 };
+		array[3] = { 2, 1 };
 		break;
 	case Piece::Tetromino::T:
-		array[0].x = 1;
-		array[0].y = 0;
-		array[1].x = 0;
-		array[1].y = 1;
-		array[2].x = 1;
-		array[2].y = 1;
-		array[3].x = 2;
-		array[3].y = 1;
+		array[0] = { 1, 0 };
+		array[1] = { 0, 1 };
+		array[2] = { 1, 1 };
+		array[3] = { 2, 1 };
 		break;
 	case Piece::Tetromino::S:
-		array[0].x = 0;
-		array[0].y = 1;
-		array[1].x = 1;
-		array[1].y = 1;
-		array[2].x = 1;
-		array[2].y = 0;
-		array[3].x = 2;
-		array[3].y = 0;
+		array[0] = { 0, 1 };
+		array[1] = { 1, 1 };
+		array[2] = { 1, 0 };
+		array[3] = { 2, 0 };
 		break;
 	case Piece::Tetromino::Z:
-		array[0].x = 0;
-		array[0].y = 0;
-		array[1].x = 1;
-		array[1].y = 0;
-		array[2].x = 1;
-		array[2].y = 1;
-		array[3].x = 2;
-		array[3].y = 1;
+		array[0] = { 0, 0 };
+		array[1] = { 1, 0 };
+		array[2] = { 1, 1 };
+		array[3] = { 2, 1 };
 		break;
 	default:
 		throw std::invalid_argument("Invalid enumerator argument given when creating a new Piece instance.");
@@ -92,7 +97,7 @@ Piece::Piece(Piece::Tetromino _tetromino) {
 	// Sync with board (center)
 	int centerX = gBoardRules.gameWidth / 2;
 	for (int i = 0; i < 4; i++) {
-		
+
 		(_blocks + i)->x += centerX + 1;
-	}	
+	}
 }
