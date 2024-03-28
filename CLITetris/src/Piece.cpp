@@ -1,37 +1,5 @@
 #include <Piece.h>
 
-int Piece::DefineOrigin(Piece::Tetromino _tetromino) {
-	int origin;
-	switch (_tetromino)
-	{
-	case Piece::O:
-		origin = -1; // -1 equals no rotation.
-		break;
-	case Piece::L:
-		origin = 1;
-		break;
-	case Piece::J:
-		origin = 2;
-		break;
-	case Piece::I:
-		origin = 1;
-		break;
-	case Piece::T:
-		origin = 2;
-		break;
-	case Piece::S:
-		origin = 1;
-		break;
-	case Piece::Z:
-		origin = 2;
-		break;
-	default:
-		throw std::invalid_argument("Invalid enumerator argument given when creating a new Piece instance.");
-		break;
-	}
-	return origin;
-}
-
 Piece::Block* Piece::AllocatePiece(Piece::Tetromino tetromino) {
 	// Allocating 4 memory addresses with the size of a block.
 	Piece::Block* array = (Piece::Block*)malloc(4 * sizeof(Piece::Block));

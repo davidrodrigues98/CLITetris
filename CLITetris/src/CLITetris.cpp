@@ -96,7 +96,7 @@ int devInitialize() {
 	ManageConsoleMode(true);
 
 	// Initializes the screen, sets up memory and clears the screen.
-	//WINDOW *win = initscr();
+	WINDOW *win = initscr();
 
 	// Starts new game object.
 	Game* gameInstance = new Game(true);
@@ -109,7 +109,7 @@ int devInitialize() {
 	// Start threads.
 	threads.push_back(thread(AutoStepDown, 500, gameInstance));
 	threads.push_back(thread(GameUpdater, gameInstance));
-	//threads.push_back(thread(PrintCycle, 50, gameInstance));
+	threads.push_back(thread(PrintCycle, 50, gameInstance));
 
 	// Join them.
 	for (auto& thread : threads) {

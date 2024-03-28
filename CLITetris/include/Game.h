@@ -75,7 +75,9 @@ protected:
 
 	BoardRules _boardRules;
 	
-	Piece::Tetromino *_tetrominoQueueLL;
+	TetrominoNode* gQueueHead, * gQueueTail, * gQueueCurrent;
+	TetrominoRotateNode* gRotateHead, * gRotateTail, * gRotateCurrent;
+	//? Piece::Tetromino *_tetrominoQueueLL;
 	//? TetrominoRotateNode* _tetrominoRotateMask;
 	
 	/// <summary>
@@ -90,6 +92,8 @@ protected:
 	/// <param name="_double_bag">true: Use double bag randomization. false: Use single bag randomization.</param>
 	/// <param name="_print">(Optional) Printing debug for testing purposes.</param>
 	void GenerateRandomTetrominoQueue(bool _double_bag, bool _print = false);
+
+	Piece::Tetromino TakeFromTetrominoQueue();
 
 	/// <summary>
 	/// Complementary function to process input movement when the game status allows it.
@@ -131,14 +135,40 @@ protected:
 
 	void RotatePiece(Piece::PieceBlockRotation _direction);
 
-	/* //?
 	/// <summary>
 	/// Auxiliary function to help load rotation masks into the main map.
 	/// </summary>
 	/// <param name="_tetromino">Selected tetromino.</param>
-	/// <returns>Map with the possible rotate positions to be inserted into the main map.</returns>
-	TetrominoRotateNode* CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
-	*/
+	void CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
+
+	/// <summary>
+	/// TBD
+	/// </summary>
+	/// <param name="_r0p">rotation 0 previous</param>
+	/// <param name="_r0n">rotation 0 next</param>
+	/// <param name="_r1p">rotation 1 previous</param>
+	/// <param name="_r1n">rotation 1 next</param>
+	/// <param name="_r2p">rotation 2 previous</param>
+	/// <param name="_r2n">rotation 2 next</param>
+	/// <param name="_r3p">rotation 3 previous</param>
+	/// <param name="_r3n">rotation 3 next</param>
+	void Game::CreateDoublyLinkedListPointer(
+		Piece::Block* _r0p,
+		Piece::Block* _r0n,
+		Piece::Block* _r1p,
+		Piece::Block* _r1n,
+		Piece::Block* _r2p,
+		Piece::Block* _r2n,
+		Piece::Block* _r3p,
+		Piece::Block* _r3n
+	);
+
+	void Short_CreateDoublyLinkedListPointer(
+		Piece::Block* _r0,
+		Piece::Block* _r1
+	);
+	
+
 public:
 	/// <summary>
 	/// Print the whole game board.

@@ -65,12 +65,4 @@ protected:
 	/// <param name="tetromino">: The desired tetromino type.</param>
 	/// <returns>A pointer to the allocated memory.</returns>
 	Block* AllocatePiece(Tetromino tetromino);
-
-	/// <summary>
-	/// Defines the origin property depending on the tetromino.
-	/// </summary>
-	/// <param name="tetromino"></param>
-	/// <returns>_origin property.</returns>
-	int DefineOrigin(Tetromino tetromino);
-
 };
