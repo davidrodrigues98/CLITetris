@@ -1,8 +1,15 @@
 ﻿// CLITetris.h : Include file for standard system include files,
 // or project specific include files.
 
+/*
+* AUTHOR SIGNATURE
+* David Rodrigues
+* Github: https://github.com/davidrodrigues98
+*/
+
 #pragma once
 
+#pragma region All dependencies are listed here. This application runs a single executable.
 #include <iostream>
 #include <windows.h>
 #include <io.h>
@@ -14,10 +21,8 @@
 #include <chrono>
 #include <thread>
 #include <curses.h>
-
 #include <Global.h>
-
-// Reference additional headers your program requires here.
+#pragma endregion
 
 #pragma region Global macro definitions.
 // Tetromino queue size of array.
@@ -27,9 +32,9 @@
 #pragma endregion
 
 /// <summary>
-/// Prepares the opened command line interface to handle the user game events.
+/// Windows event handler for user input will only catch keyboard events.
 /// </summary>
-/// <param name="_gameMode">(Optional) What is the gamemode being prepared?</param>
+/// <param name="_gameMode">Must be true when the game starts, and false when the program is in the start menu.</param>
 void ManageConsoleMode(bool _gameMode = true);
 
 /// <summary>

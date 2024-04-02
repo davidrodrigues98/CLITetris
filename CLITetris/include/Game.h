@@ -3,17 +3,17 @@
 #include <Piece.h>
 #include <Printer.h>
 
+#pragma region Auxiliary structures outside class definition
 /// <summary>
 /// Enumerator to process key mapping against the application.
 /// </summary>
 typedef enum KeyBind {
-//?	UP,
 	DOWN,
-	LEFT,
-	RIGHT,
+	kbLEFT,
+	kbRIGHT,
 	ROTATE_LEFT,
 	ROTATE_RIGHT,
-	IDLE //Special action for when an user doesn't press any key at a given time interval.
+	IDLE // Special action for when an user doesn't press any key at a given time interval.
 } KeyBind;
 
 /// <summary>
@@ -28,7 +28,7 @@ KeyBind KeyEventProc(KEY_EVENT_RECORD ker);
 /// </summary>
 typedef struct TetrominoNode {
 	// Tetromino value.
-	Piece::Tetromino value;
+	Tetromino value;
 	TetrominoNode* next;
 } TetrominoNode;
 
@@ -38,8 +38,8 @@ typedef struct TetrominoNode {
 typedef struct TetrominoRotateNode {
 	TetrominoRotateNode* prev;
 	TetrominoRotateNode* next;
-	Piece::Block *relativeCoordinatesPrev; //max +3
-	Piece::Block* relativeCoordinatesNext; //max +3
+	Block *relativeCoordinatesPrev; //max +3
+	Block* relativeCoordinatesNext; //max +3
 } TetrominoRotateNode;
 
 /// <summary>
@@ -58,6 +58,7 @@ typedef enum GameStatus {
 	LAND,  // Current tetromino has reached the final spot.
 	OVER   // Conditions for game over are met.
 } GameStatus;
+#pragma endregion
 
 /// <summary>
 /// Class for game logic.
@@ -66,26 +67,26 @@ typedef enum GameStatus {
 /// </summary>
 class Game {
 protected:
-	/// <summary>
-	/// Size of each board line.
-	/// </summary>
+
+#pragma region Properties
 	int _lineSize;
-
+	GameStatus gGameStatus;
 	Printer::Visuals* _gameBoard;
-
 	BoardRules _boardRules;
 	
+	// Linked list pointers.
+	// For the Tetromino spawning queue:
 	TetrominoNode* gQueueHead, * gQueueTail, * gQueueCurrent;
+	// For the active piece rotation mask:
 	TetrominoRotateNode* gRotateHead, * gRotateTail, * gRotateCurrent;
-	//? Piece::Tetromino *_tetrominoQueueLL;
-	//? TetrominoRotateNode* _tetrominoRotateMask;
 	
 	/// <summary>
 	/// Pointer reference to the piece being controlled at the moment.
 	/// </summary>
 	Piece* _activePiece;
+#pragma endregion
 
-	
+#pragma region Private methods
 	/// <summary>
 	/// Function that generates the starting pieces.
 	/// </summary>
@@ -93,7 +94,18 @@ protected:
 	/// <param name="_print">(Optional) Printing debug for testing purposes.</param>
 	void GenerateRandomTetrominoQueue(bool _double_bag, bool _print = false);
 
-	Piece::Tetromino TakeFromTetrominoQueue();
+	/// <summary>
+	/// Fetch the next tetromino type from the list.
+	/// </summary>
+	/// <returns>Next tetromino type for piece instancing.</returns>
+	Tetromino TakeFromTetrominoQueue();
+
+	/// <summary>
+	/// Debug function to force the next piece type.
+	/// </summary>
+	/// <param name="_debugTetType">Chosen tetromino type.</param>
+	/// <returns>Debug type.</returns>
+	Tetromino TakeFromTetrominoQueue(Tetromino _debugTetType);
 
 	/// <summary>
 	/// Complementary function to process input movement when the game status allows it.
@@ -133,13 +145,18 @@ protected:
 	/// </summary>
 	bool ValidateMove(KeyBind _action);
 
-	void RotatePiece(Piece::PieceBlockRotation _direction);
+	/// <summary>
+	/// Navigates throughout the doubly linked list for the relative rotation mask. 
+	/// </summary>
+	/// <param name="_direction">Which direction to navigate (rotate).</param>
+	/// <param name="_print">Enable/disable debug mode.</param>
+	void RotatePiece(PieceBlockRotation _direction, bool _print = false);
 
 	/// <summary>
 	/// Auxiliary function to help load rotation masks into the main map.
 	/// </summary>
 	/// <param name="_tetromino">Selected tetromino.</param>
-	void CreateRotateMaskForTetromino(Piece::Tetromino _tetromino);
+	void CreateRotateMaskForTetromino(Tetromino _tetromino);
 
 	/// <summary>
 	/// TBD
@@ -153,23 +170,25 @@ protected:
 	/// <param name="_r3p">rotation 3 previous</param>
 	/// <param name="_r3n">rotation 3 next</param>
 	void Game::CreateDoublyLinkedListPointer(
-		Piece::Block* _r0p,
-		Piece::Block* _r0n,
-		Piece::Block* _r1p,
-		Piece::Block* _r1n,
-		Piece::Block* _r2p,
-		Piece::Block* _r2n,
-		Piece::Block* _r3p,
-		Piece::Block* _r3n
+		Block* _r0p,
+		Block* _r0n,
+		Block* _r1p,
+		Block* _r1n,
+		Block* _r2p,
+		Block* _r2n,
+		Block* _r3p,
+		Block* _r3n
 	);
 
 	void Short_CreateDoublyLinkedListPointer(
-		Piece::Block* _r0,
-		Piece::Block* _r1
+		Block* _r0,
+		Block* _r1
 	);
-	
+#pragma endregion
 
 public:
+
+#pragma region Public methods
 	/// <summary>
 	/// Print the whole game board.
 	/// </summary>
@@ -197,6 +216,6 @@ public:
 	/// Function to start the game in the standard way. No debugs or test prints: Official game start.
 	/// </summary>
 	void StartGame();
-
+#pragma endregion
 
 };

@@ -9,11 +9,13 @@ DWORD gFdwMode, gFdwOldMode;
 // Flags and structures that will be used in multiple threads.
 atomic<bool> gTerminateGameUpdaterThread(false), gTerminateAutoStepDownThread(false);//, gGameUpdaterInputEnabled(false);
 
+/// <summary>
+/// Waits for next windows keyboar input event and handles it accordigly.
+/// </summary>
+/// <param name="_gameInstance">Created game instance to be send the data.</param>
+/// <param name="_hStdIn">win Event handler</param>
+/// <returns></returns>
 KeyBind win32_TimeStep(Game *_gameInstance, HANDLE _hStdIn) {
-	//long result = WaitForSingleObject(_hStdIn, /*gGameRules.GAME_SPEED_S */ 500);
-	//switch(result)
-	//{
-	//case WAIT_OBJECT_0:
 	INPUT_RECORD irInBuf[INPUT_RECORD_BUFFER_SIZE];
 	DWORD cNumRead;
 	if (ReadConsoleInput(

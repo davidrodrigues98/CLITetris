@@ -2,39 +2,59 @@
 
 #include <CLITetris.h>
 
+#pragma region Auxiliary structures outside class definition
+/// <summary>
+/// Enumerating tetromino type codes to instance the piece.
+/// </summary>
+typedef enum Tetromino {
+	O,
+	L,
+	J,
+	I,
+	T,
+	S,
+	Z
+} Tetromino;
+
+/// <summary>
+/// Bidimensional coordinate structure. Each piece has 4.
+/// </summary>
+typedef struct Block {
+	int x;
+	int y;
+	Block(int a, int b) : x(a), y(b) {}
+} Block;
+
+/// <summary>
+/// Simple enumerator to simplify rotation input.
+/// </summary>
+typedef enum PieceBlockRotation {
+	LEFT,
+	RIGHT
+} PieceBlockRotation;
+#pragma endregion
+
 class Piece {
 
 public:
 
-	/// <summary>
-	/// Enumerating tetromino type codes to instance the piece.
-	/// </summary>
-	typedef enum Tetromino {
-		O,
-		L,
-		J,
-		I,
-		T,
-		S,
-		Z
-	} Tetromino;
+#pragma region Properties
 
 	/// <summary>
-	/// Bidimensional coordinate structure. Each piece has 4.
+	/// If piece is "O", rotation must be prohibited by the object.
 	/// </summary>
-	typedef struct Block {
-		int x;
-		int y;
-		Block(int a, int b) : x(a), y(b) {}
-	} Block;
+	bool DISABLE_ROTATION = false;
 
 	/// <summary>
-	/// Simple enumerator to simplify rotation input.
+	/// Property tetromino type.
 	/// </summary>
-	typedef enum PieceBlockRotation {
-		LEFT,
-		RIGHT
-	} PieceBlockRotation;
+	Tetromino tetromino;
+
+	/// <summary>
+	/// Returns pointer to allocated coordinates from this piece.
+	/// </summary>
+	Block* _blocks = NULL;
+#pragma endregion
 
 	/// <summary>
 	/// Default constructor. Tetromino required for instancing.
@@ -42,21 +62,6 @@ public:
 	/// <param name="_tetromino">: The desired tetromino type.</param>
 	Piece(Tetromino _tetromino);
 
-	/// <summary>
-	/// Algorithm to rotate the selected tetromino piece in a given direction.
-	/// </summary>
-	/// <param name="_direction">Input direction: LEFT or RIGHT.</param>
-	void Rotate(PieceBlockRotation _direction);
-
-	/// <summary>
-	/// Property tetromino type.
-	/// </summary>
-	Tetromino tetromino;
-	
-	/// <summary>
-	/// Returns pointer to allocated coordinates from this piece.
-	/// </summary>
-	Block* _blocks = NULL;
 protected:
 
 	/// <summary>

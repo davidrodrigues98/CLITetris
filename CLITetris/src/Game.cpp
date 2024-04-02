@@ -1,17 +1,34 @@
 #include <Game.h>
+
 using namespace std;
 
-GameStatus gGameStatus;
+KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
+{
+    WORD recordedKeyCode = ker.wVirtualKeyCode;
+    KeyBind result = IDLE;
+
+    // Virtual key mapping.
+    switch (recordedKeyCode)
+    {
+    case 37: result = KeyBind::kbLEFT;         break;
+    case 38: result = KeyBind::ROTATE_RIGHT; break;
+    case 39: result = KeyBind::kbRIGHT;        break;
+    case 40: result = KeyBind::ROTATE_LEFT;  break;
+    default: result = KeyBind::IDLE;         break;
+    }
+
+    return result;
+}
 
 void Game::CreateDoublyLinkedListPointer(
-    Piece::Block *_r0p,
-    Piece::Block *_r0n,
-    Piece::Block *_r1p,
-    Piece::Block *_r1n,
-    Piece::Block *_r2p,
-    Piece::Block *_r2n,
-    Piece::Block *_r3p,
-    Piece::Block *_r3n
+    Block *_r0p,
+    Block *_r0n,
+    Block *_r1p,
+    Block *_r1n,
+    Block *_r2p,
+    Block *_r2n,
+    Block *_r3p,
+    Block *_r3n
 )
 {
     //r0 Original Position
@@ -49,8 +66,8 @@ void Game::CreateDoublyLinkedListPointer(
 }
 
 void Game::Short_CreateDoublyLinkedListPointer(
-    Piece::Block* _r0,
-    Piece::Block* _r1
+    Block* _r0,
+    Block* _r1
 )
 {
     // r1
@@ -70,165 +87,150 @@ void Game::Short_CreateDoublyLinkedListPointer(
     gRotateCurrent = gRotateHead;
 }
 
-void Game::CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
-    Piece::Block* r0p, * r0n, * r1p, * r1n, * r2p, * r2n, * r3p, * r3n;
+void Game::CreateRotateMaskForTetromino(Tetromino _tetromino) {
+    Block* r0p, * r0n, * r1p, * r1n, * r2p, * r2n, * r3p, * r3n;
     switch (_tetromino)
     {
-    case Piece::L: {
+    case L: {
         
-        r0p = new Piece::Block[4]
+        r0p = new Block[4]
         {
-            { -1, 0 }, { 0,1 }, { 1,2 }, { 2,1 }
+            { 0, 2 }, { 1, 1 }, { 2, 0 }, { 1, -1 }
         };
-        r0n = new Piece::Block[4]
+        r0n = new Block[4]
+        {
+            { -1, 0 }, { 0, 1 }, { 1, 2 }, { 2, 1 }
+        };
+        r1p = new Block[4]
+        {
+            { -2, -1 }, { -1, 0 }, { 0, 1 }, { 1, 0 }
+        };
+        r1n = new Block[4]
         {
             { 0, -2 }, { -1, -1 }, { -2, 0 }, { -1, 1 }
         };
-        r1p = new Piece::Block[4]
+        r2p = new Block[4]
         {
-            {-2,-1},{-1,0},{0,1},{1,0}
+            { 1, -1 }, { 0, 0 }, { -1, 1 }, { 0, 2 }
         };
-        r1n = new Piece::Block[4]
+        r2n = new Block[4]
         {
-            {0,-2},{-1,-1},{-2,0},{-1,1}
+            { 2, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 }
         };
-        r2p = new Piece::Block[4]
+        r3p = new Block[4]
         {
-            {1,-1},{0,0},{-1,1},{0,2}
+            { 1, 0 }, { 0, -1 }, { -1, -2 }, { -2, -1 }
         };
-        r2n = new Piece::Block[4]
+        r3n = new Block[4]
         {
-            {2,1},{1,0},{0,-1},{-1,0}
-        };
-        r3p = new Piece::Block[4]
-        {
-            {1,0},{0,-1},{-1,-2},{-2,-1}
-        };
-        r3n = new Piece::Block[4]
-        {
-            {1,1},{0,0},{1,-1},{0,-2}
+            { -1, 1 }, { 0, 0 }, { 1, -1 }, { 0, -2 }
         };
         CreateDoublyLinkedListPointer(r0p, r0n, r1p, r1n, r2p, r2n, r3p, r3n);
         break;
     }
-    case Piece::J: {
-        r0p = new Piece::Block[4]
+    case J: {
+        r0p = new Block[4]
         {
-            { 1, 2 }, { 0,1 }, { -1,0 }, { 0,-1 }
+            { 2, 0 }, { 1, 1 }, { 0, 2 }, { -1, 1 }
         };
-        r0n = new Piece::Block[4]
+        r0n = new Block[4]
         {
-            {0,0},{1,1},{0,2},{-1,1}
+            { 1, 2 }, { 0, 1 }, { -1, 0 }, { 0, -1 }
         };
-        r1p = new Piece::Block[4]
+        r1p = new Block[4]
         {
-            {-2,0},{-1,-1},{0,-2},{1,-1}
+            { 0, 1 }, { -1, 0 }, { -2, -1 }, { -1, -2 }
         };
-        r1n = new Piece::Block[4]
+        r1n = new Block[4]
         {
-            {0,1},{-1,0},{1,0},{2,1}
+            { -2, 0 }, { -1, -1 }, { 0, -2 }, { 1, -1 }
         };
-        r2p = new Piece::Block[4]
+        r2p = new Block[4]
         {
-            {0,-1},{1,0},{2,1},{1,2}
+            { -1, 1 }, { 0, 0 }, { 1, -1 }, { 2, 0 }
         };
-        r2n = new Piece::Block[4]
+        r2n = new Block[4]
         {
-            {-1,1},{0,0},{1,-1},{2,0}
+            { 0, -1 }, { 1, 0 }, { 2, 1 }, { 1, 2 }
         };
-        r3p = new Piece::Block[4]
+        r3p = new Block[4]
         {
-            {1,-1},{0,0},{-1,1},{-2,0}
+            { -1, -2 }, { 0, -1 }, { 1, 0 }, { 0, 1 }
         };
-        r3n = new Piece::Block[4]
+        r3n = new Block[4]
         {
-            {-1,-2},{0,-1},{0,-1},{1,-2}
+            { 1, -1 }, { 0, 0 }, { -1, 1 }, { -2, 0 }
         };
         CreateDoublyLinkedListPointer(r0p, r0n, r1p, r1n, r2p, r2n, r3p, r3n);
         break;
     }
-    case Piece::I: {
-        r0n = new Piece::Block[4] {
-            {0,0},{1,-1},{2,-2},{3,-3}
+    case I: {
+        r0n = new Block[4] {
+            { 0, 0 }, { 1, -1 }, { 2, -2 }, { 3, -3 }
         };
-        r1n = new Piece::Block[4] {
-            {0,0},{-1,1},{-2,2},{-3,3}
+        r1n = new Block[4] {
+            { 0, 0 }, { -1, 1 }, { -2, 2 }, { -3, 3 }
         };
         Short_CreateDoublyLinkedListPointer(r0n, r1n);
         break;
     }
-    case Piece::T: {
-        r0p = new Piece::Block[4]
+    case T: {
+        r0p = new Block[4]
         {
-            {-1, 1}, {0,0}, {1,-1}, {1,-1}
+            { 0, 1 }, { 1, 0 }, { 0, -1 }, { 2, -1 }
         };
-        r0n = new Piece::Block[4]
+        r0n = new Block[4]
         {
-            {0, 1}, {1, 0}, {0, -1}, {2, -1}
+            { -1, 1 }, { 0, 0 }, { 1, -1 }, { 1, -1 }
         };
-        r1p = new Piece::Block[4]
+        r1p = new Block[4]
         {
-            {0, -1}, {1, 0}, {0, 1}, {2, 1}
+            { 0, 0 }, { -1, 1 }, { 0, 0 }, { -2, 2 }
         };
-        r1n = new Piece::Block[4]
+        r1n = new Block[4]
         {
-            {0, 0}, {-1, 1}, {0, 0}, {-2, 2}
+            { 0, -1 }, { -1, 0 }, { 0, 1 }, { -2, 1 }
         };
-        r2p = new Piece::Block[4]
+        r2p = new Block[4]
         {
-            {0, -1}, {1, -1}, {0, 0}, {2, -2}
+            { -1, 0 }, { 0, -1 }, { 1, 0 }, { 1, -2 }
         };
-        r2n = new Piece::Block[4]
+        r2n = new Block[4]
         {
-            {-1, 0}, {0, -1}, {1, 0}, {1, -2}
+            { 0, 0 }, { 1, -1 }, { 0, 0 }, { 2, -2 }
         };
-        r3p = new Piece::Block[4]
+        r3p = new Block[4]
         {
-            {1, 0}, {0, 1}, {-1, 0}, {-1, 2}
+            { 1, -1 }, { 0, 0 }, { -1, 1 }, { -1, 1 }
         };
-        r3n = new Piece::Block[4]
+        r3n = new Block[4]
         {
-            {1, -1}, {0, 0}, {-1, 1}, {-1, 1}
+            { 1, 0 }, { 0, 1 }, { -1, 0 }, { -1, 2 }
         };
         CreateDoublyLinkedListPointer(r0p, r0n, r1p, r1n, r2p, r2n, r3p, r3n);
         break;
     }
-    case Piece::S: {
-        r0n = new Piece::Block[4] {
+    case S: {
+        r0n = new Block[4] {
             {0,1},{1,0},{0,-1},{1,-2}
         };
-        r1n = new Piece::Block[4] {
+        r1n = new Block[4] {
             {0,-1},{-1,0},{0,1},{-1,2}
         };
         Short_CreateDoublyLinkedListPointer(r0n, r1n);
         break;
     }
-    case Piece::Z: {
-        r0n = new Piece::Block[4]
+    case Z: {
+        r0n = new Block[4]
         {
             {-1,0},{0,-1},{1,0},{2,-1}
         };
-        r1n = new Piece::Block[4]
+        r1n = new Block[4]
         {
             {1,0},{0,1},{-1,0},{-2,1}
         };
         Short_CreateDoublyLinkedListPointer(r0n, r1n);
         break;
-    }
-    case Piece::O: { // Special case, loop into same node with empty value to still validate the rotation for a square.
-        /*gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-        Piece::Block dummyR[4] = {
-            {0,0},{0,0},{0,0},{0,0}
-        };
-        gRotateHead->relativeCoordinatesNext = dummyR;
-        gRotateHead->relativeCoordinatesPrev = dummyR;
-        gRotateTail = gRotateHead;
-        gRotateHead->prev = gRotateHead;
-        gRotateHead->next = gRotateHead;
-        gRotateCurrent = gRotateHead;
-        break;
-        */
-        throw std::invalid_argument("Invalid enumerator argument given when creating a new Piece instance.");
     }
     default:
         throw std::invalid_argument("Invalid enumerator argument given when creating a new Piece instance.");
@@ -237,69 +239,16 @@ void Game::CreateRotateMaskForTetromino(Piece::Tetromino _tetromino) {
     }
 }
 
-
-
-void Game::RotatePiece(Piece::PieceBlockRotation _direction) {
-    if (_direction == Piece::PieceBlockRotation::RIGHT)
-    {
-        gRotateCurrent = gRotateCurrent->next;
-        for (int i = 0; i < 4; i++) {
-            Piece::Block* blocks = _activePiece->_blocks;
-            Piece::Block* relative = gRotateCurrent->relativeCoordinatesNext;
-            (blocks + i)->x += (relative + i)->x;
-            (blocks + i)->y += (relative + i)->y;
-        }
-    }
-    else {
-        gRotateCurrent = gRotateCurrent->prev;
-        for (int i = 0; i < 4; i++) {
-            Piece::Block* blocks = _activePiece->_blocks; 
-            Piece::Block* relative = gRotateCurrent->relativeCoordinatesPrev;
-            (blocks + i)->x += (relative + i)->x;
-            (blocks + i)->y += (relative + i)->y;
-        }
-    }
-}
-
-KeyBind KeyEventProc(KEY_EVENT_RECORD ker)
-{
-    WORD recordedKeyCode = ker.wVirtualKeyCode;
-    KeyBind result = IDLE;
-
-    // Virtual key mapping.
-    switch (recordedKeyCode)
-    {
-        case 37: result = LEFT;         break;
-        case 38: result = ROTATE_RIGHT; break;
-        case 39: result = RIGHT;        break;
-        //? case 40: result = DOWN; break;
-        default: result = IDLE;         break;
-    }
-
-    return result;
-}
-
-Game::Game(bool _doubleBag, bool _print) {
-    Game::GenerateRandomTetrominoQueue(_doubleBag, _print);
-    // Setting new game status.
-    gGameStatus = START;
-    // Calc size of each line.
-    _lineSize = gBoardRules.gameWidth;
-
-    //Make a dynamic rotate mask load.
-
-}
-
 void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
     // Fixed array to support the starting randomization.
-    Piece::Tetromino shuffleData[TETRO_QUEUE_SIZE] = {
-        Piece::Tetromino::O,
-        Piece::Tetromino::L,
-        Piece::Tetromino::J,
-        Piece::Tetromino::I,
-        Piece::Tetromino::T,
-        Piece::Tetromino::S,
-        Piece::Tetromino::Z
+    Tetromino shuffleData[TETRO_QUEUE_SIZE] = {
+        Tetromino::O,
+        Tetromino::L,
+        Tetromino::J,
+        Tetromino::I,
+        Tetromino::T,
+        Tetromino::S,
+        Tetromino::Z
     };
 
     // Calling the shuffle function here:
@@ -339,14 +288,14 @@ void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
     // Use 2 bags with 7 distinct tetromino in each.
     else {
         // Copy of support array for the starting randomization.
-        Piece::Tetromino shuffleData2[TETRO_QUEUE_SIZE] = {
-            Piece::Tetromino::O,
-            Piece::Tetromino::L,
-            Piece::Tetromino::J,
-            Piece::Tetromino::I,
-            Piece::Tetromino::T,
-            Piece::Tetromino::S,
-            Piece::Tetromino::Z
+        Tetromino shuffleData2[TETRO_QUEUE_SIZE] = {
+            Tetromino::O,
+            Tetromino::L,
+            Tetromino::J,
+            Tetromino::I,
+            Tetromino::T,
+            Tetromino::S,
+            Tetromino::Z
         };
 
         // Shuffling both arrays.
@@ -393,21 +342,31 @@ void Game::GenerateRandomTetrominoQueue(bool _double_bag, bool _print) {
     }
 }
 
-Piece::Tetromino Game::TakeFromTetrominoQueue() {
-    Piece::Tetromino result = gQueueCurrent->value;
+Tetromino Game::TakeFromTetrominoQueue() {
+    Tetromino result = gQueueCurrent->value;
     gQueueCurrent = gQueueCurrent->next;
     return result;
 }
 
+Tetromino Game::TakeFromTetrominoQueue(Tetromino _debugTetType) {
+    return _debugTetType;
+}
+
 void Game::Update(KeyBind _nextAction, bool _print) {
     switch (gGameStatus) {
-        case GameStatus::START: 
-            _activePiece = new Piece(TakeFromTetrominoQueue());
+    case GameStatus::START: {
+        Tetromino nextPieceType = TakeFromTetrominoQueue();
+        nextPieceType = Tetromino::O;
+        _activePiece = new Piece(nextPieceType);
+        if (nextPieceType != Tetromino::O)
             CreateRotateMaskForTetromino(_activePiece->tetromino);
-            if(_print) 
-                wprintf(L"%i\n", _activePiece->tetromino);
-            gGameStatus = GameStatus::MOVE;
-            break;
+        else
+            _activePiece->DISABLE_ROTATION = true;
+        if (_print)
+            wprintf(L"Debug: Game::Update - Active piece is tetromino: %i\n", _activePiece->tetromino);
+        gGameStatus = GameStatus::MOVE;
+        break;
+    }
         case GameStatus::MOVE:
             UpdateBoard(true);
             ProcessMovement(_nextAction, _print);
@@ -420,40 +379,44 @@ void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
     switch (_nextAction) {
         case KeyBind::DOWN: 
             if (ValidateMove(_nextAction)) {
-                if (_print) wprintf(L"DOWN\n");
+                if (_print) wprintf(L"Debug: Game::ProcessMovement -> DOWN\n");
                 MoveDown();
             }
             break;
-        case KeyBind::LEFT:
+        case KeyBind::kbLEFT:
             if (ValidateMove(_nextAction)) {
-                if (_print) wprintf(L"LEFT\n");
+                if (_print) wprintf(L"Debug: Game::ProcessMovement -> LEFT\n");
                 MoveLeft();
             }
             break;
-        case KeyBind::RIGHT:
+        case KeyBind::kbRIGHT:
             if (ValidateMove(_nextAction)) {
-                if (_print) wprintf(L"RIGHT\n");
+                if (_print) wprintf(L"Debug: Game::ProcessMovement -> RIGHT\n");
                 MoveRight();
             }
             break;
-        case KeyBind::ROTATE_LEFT: break;
+        case KeyBind::ROTATE_LEFT:
+            if (_print) wprintf(L"Debug: Game::ProcessMovement -> ROTATE_LEFT");
+            RotatePiece(PieceBlockRotation::LEFT);
+            break;
         case KeyBind::ROTATE_RIGHT: 
-            RotatePiece(Piece::PieceBlockRotation::RIGHT);
+            if (_print) wprintf(L"Debug: Game::ProcessMovement -> ROTATE_RIGHT");
+            RotatePiece(PieceBlockRotation::RIGHT);
             break;
     }
 }
 
 bool Game::ValidateMove(KeyBind _action) {
-    Piece::Block* blocks = _activePiece->_blocks;
+    Block* blocks = _activePiece->_blocks;
     int nX = 0, nY = 0;
     switch (_action) {
-        case KeyBind::LEFT:
+        case kbLEFT:
             nX = -1;
         break;
-        case KeyBind::RIGHT:
+        case kbRIGHT:
             nX = 1;
         break;
-        case KeyBind::DOWN:
+        case DOWN:
             nY = 1;
         default:break;
     }
@@ -469,22 +432,52 @@ bool Game::ValidateMove(KeyBind _action) {
     return true;
 }
 
+void Game::RotatePiece(PieceBlockRotation _direction, bool _print) {
+    if (_activePiece->DISABLE_ROTATION == false) {
+        if (_direction == PieceBlockRotation::RIGHT)
+        {
+            gRotateCurrent = gRotateCurrent->next;
+            for (int i = 0; i < 4; i++) {
+                Block* blocks = _activePiece->_blocks;
+                Block* relative = gRotateCurrent->relativeCoordinatesNext;
+                Block* relativeI = relative + i;
+                (blocks + i)->x += (relativeI)->x;
+                (blocks + i)->y += (relativeI)->y;
+            }
+        }
+        else {
+            gRotateCurrent = gRotateCurrent->prev;
+            for (int i = 0; i < 4; i++) {
+                Block* blocks = _activePiece->_blocks;
+                Block* relative = gRotateCurrent->relativeCoordinatesPrev;
+                Block* relativeI = relative + i;
+                (blocks + i)->x += (relativeI)->x;
+                (blocks + i)->y += (relativeI)->y;
+            }
+        }
+    }
+    else
+        if (_print)
+            wprintf(L"Debug: Game::RotatePiece -> DISABLE_ROTATION flag was \"true\". Rotation was not allowed.");
+
+}
+
 void Game::MoveDown() {
-    Piece::Block* blocks = _activePiece->_blocks;
+    Block* blocks = _activePiece->_blocks;
     for (int i = 0; i < 4; i++) {
         (blocks + i)->y++;
     }
 }
 
 void Game::MoveLeft() {
-    Piece::Block* blocks = _activePiece->_blocks;
+    Block* blocks = _activePiece->_blocks;
     for (int i = 0; i < 4; i++) {
         (blocks + i)->x--;
     }
 }
 
 void Game::MoveRight() {
-    Piece::Block* blocks = _activePiece->_blocks;
+    Block* blocks = _activePiece->_blocks;
     for (int i = 0; i < 4; i++) {
         (blocks + i)->x++;
     }
@@ -496,7 +489,7 @@ void Game::StartGame() {
 }
 
 void Game::UpdateBoard(bool _clear) {
-    Piece::Block* blocks = _activePiece->_blocks;
+    Block* blocks = _activePiece->_blocks;
     for (int i = 0; i < 4; i++) {
         int x = (blocks+i)->x;
         int y = (blocks+i)->y;
@@ -569,4 +562,10 @@ void Game::PrintBoard() {
     refresh();
 }
 
-
+Game::Game(bool _doubleBag, bool _print) {
+    Game::GenerateRandomTetrominoQueue(_doubleBag, _print);
+    // Setting new game status.
+    gGameStatus = START;
+    // Calc size of each line.
+    _lineSize = gBoardRules.gameWidth;
+}
