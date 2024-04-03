@@ -2,6 +2,7 @@
 
 Printer::PrintMap Printer::pMap_ = {
 	{ BLOCK, L'\u2588' },
+	{ PLACED_BLOCK, L'\u2588'},
 	{ EMPTY, L' ' },
 	{ BORDERV, L'\u2551' },
 	{ BORDERH, L'\u2550' },

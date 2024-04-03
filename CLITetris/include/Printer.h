@@ -14,7 +14,7 @@ public:
 		EMPTY	= 0,
 		BORDERV	= 10,
 		BORDERH	= 11,
-		BLOCKPLACED = 12,
+		PLACED_BLOCK = 12,
 		NEWLINE = 2
 	} Visuals;
 
