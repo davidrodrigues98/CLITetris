@@ -57,26 +57,25 @@ Block* Piece::AllocatePiece(Tetromino tetromino) {
 }
 
 void Piece::CreateDoublyLinkedListPointer(
-	Block* _r0p,
-	Block* _r0n,
-	Block* _r1p,
-	Block* _r1n,
-	Block* _r2p,
-	Block* _r2n,
-	Block* _r3p,
-	Block* _r3n
+	Block** _r0p,
+	Block** _r0n,
+	Block** _r1p,
+	Block** _r1n,
+	Block** _r2p,
+	Block** _r2n,
+	Block** _r3p,
+	Block** _r3n
 )
 {
 	//r0 Original Position
 	gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-	gRotateTail->relativeCoordinatesPrev = _r0p;
-	gRotateTail->relativeCoordinatesNext = _r0n;
-
+    gRotateTail->relativeCoordinatesPrev = *_r0p;
+    gRotateTail->relativeCoordinatesNext = *_r0n;
 
 	//r1
 	TetrominoRotateNode* aux = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-	aux->relativeCoordinatesPrev = _r1p;
-	aux->relativeCoordinatesNext = _r1n;
+	aux->relativeCoordinatesPrev = *_r1p;
+	aux->relativeCoordinatesNext = *_r1n;
 	gRotateTail->next = aux;
 	aux->prev = gRotateTail;
 	TetrominoRotateNode* aux2 = aux;
@@ -84,15 +83,15 @@ void Piece::CreateDoublyLinkedListPointer(
 
 	//r2
 	aux = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-	aux->relativeCoordinatesPrev = _r2p;
-	aux->relativeCoordinatesNext = _r2n;
+	aux->relativeCoordinatesPrev = *_r2p;
+	aux->relativeCoordinatesNext = *_r2n;
 	aux->prev = aux2;
 	aux2->next = aux;
 
 	//r3
 	gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-	gRotateHead->relativeCoordinatesPrev = _r3p;
-	gRotateHead->relativeCoordinatesNext = _r3n;
+	gRotateHead->relativeCoordinatesPrev = *_r3p;
+	gRotateHead->relativeCoordinatesNext = *_r3n;
 	aux->next = gRotateHead;
 	gRotateTail->prev = gRotateHead;
 	gRotateHead->prev = aux;
@@ -102,20 +101,20 @@ void Piece::CreateDoublyLinkedListPointer(
 }
 
 void Piece::Short_CreateDoublyLinkedListPointer(
-	Block* _r0,
-	Block* _r1
+	Block** _r0,
+	Block** _r1
 )
 {
 	// r1
 	gRotateTail = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-	gRotateTail->relativeCoordinatesPrev = _r1;
-	gRotateTail->relativeCoordinatesNext = _r1;
+	gRotateTail->relativeCoordinatesPrev = *_r1;
+	gRotateTail->relativeCoordinatesNext = *_r1;
 
 
 	// r0 Original position.
 	gRotateHead = (TetrominoRotateNode*)malloc(sizeof(TetrominoRotateNode));
-	gRotateHead->relativeCoordinatesPrev = _r0;
-	gRotateHead->relativeCoordinatesNext = _r0;
+	gRotateHead->relativeCoordinatesPrev = *_r0;
+	gRotateHead->relativeCoordinatesNext = *_r0;
 	gRotateTail->next = gRotateHead;
 	gRotateTail->prev = gRotateHead;
 	gRotateHead->next = gRotateTail;
@@ -124,7 +123,7 @@ void Piece::Short_CreateDoublyLinkedListPointer(
 }
 
 void Piece::CreateRotateMaskForTetromino() {
-    Block* r0p, * r0n, * r1p, * r1n, * r2p, * r2n, * r3p, * r3n;
+    Block* r0p=nullptr, * r0n=nullptr, * r1p=nullptr, * r1n=nullptr, * r2p=nullptr, * r2n=nullptr, * r3p=nullptr, * r3n=nullptr;
     switch (tetromino)
     {
     case L: {
@@ -161,7 +160,7 @@ void Piece::CreateRotateMaskForTetromino() {
         {
             { -1, 1 }, { 0, 0 }, { 1, -1 }, { 0, -2 }
         };
-        CreateDoublyLinkedListPointer(r0p, r0n, r1p, r1n, r2p, r2n, r3p, r3n);
+        CreateDoublyLinkedListPointer(&r0p, &r0n, &r1p, &r1n, &r2p, &r2n, &r3p, &r3n);
         break;
     }
     case J: {
@@ -197,7 +196,7 @@ void Piece::CreateRotateMaskForTetromino() {
         {
             { 1, -1 }, { 0, 0 }, { -1, 1 }, { -2, 0 }
         };
-        CreateDoublyLinkedListPointer(r0p, r0n, r1p, r1n, r2p, r2n, r3p, r3n);
+        CreateDoublyLinkedListPointer(&r0p, &r0n, &r1p, &r1n, &r2p, &r2n, &r3p, &r3n);
         break;
     }
     case I: {
@@ -207,7 +206,7 @@ void Piece::CreateRotateMaskForTetromino() {
         r1n = new Block[4]{
             { 0, 0 }, { -1, 1 }, { -2, 2 }, { -3, 3 }
         };
-        Short_CreateDoublyLinkedListPointer(r0n, r1n);
+        Short_CreateDoublyLinkedListPointer(&r0n, &r1n);
         break;
     }
     case T: {
@@ -243,7 +242,7 @@ void Piece::CreateRotateMaskForTetromino() {
         {
             { 1, 0 }, { 0, 1 }, { -1, 0 }, { -1, 2 }
         };
-        CreateDoublyLinkedListPointer(r0p, r0n, r1p, r1n, r2p, r2n, r3p, r3n);
+        CreateDoublyLinkedListPointer(&r0p, &r0n, &r1p, &r1n, &r2p, &r2n, &r3p, &r3n);
         break;
     }
     case S: {
@@ -253,7 +252,7 @@ void Piece::CreateRotateMaskForTetromino() {
         r1n = new Block[4]{
             {0,-1},{-1,0},{0,1},{-1,2}
         };
-        Short_CreateDoublyLinkedListPointer(r0n, r1n);
+        Short_CreateDoublyLinkedListPointer(&r0n, &r1n);
         break;
     }
     case Z: {
@@ -265,7 +264,7 @@ void Piece::CreateRotateMaskForTetromino() {
         {
             {1,0},{0,1},{-1,0},{-2,1}
         };
-        Short_CreateDoublyLinkedListPointer(r0n, r1n);
+        Short_CreateDoublyLinkedListPointer(&r0n, &r1n);
         break;
     }
     default:
@@ -322,22 +321,28 @@ Piece::Piece(Tetromino _tetromino) {
         DISABLE_ROTATION = true;
 }
 
-Piece::~Piece() {
-    free(_blocks);   // Clear memory for block coordinates.
-
-    _blocks = nullptr;
-    gRotateCurrent = nullptr;
-    gRotateTail = nullptr;
-    //this is totally NOT ok
-    TetrominoRotateNode* tmp = gRotateHead;
-    while (gRotateHead->next->next != nullptr) {            // Clear memory for rotation mask doubly linked list.
-        tmp = tmp->next;                      // Needed to "delete[]" the Blocks because the "new" operator was used.
-        gRotateHead = gRotateHead->next;        // Then, use "free" for the whole node address.
-        free(tmp->relativeCoordinatesNext);
-        tmp->relativeCoordinatesNext = nullptr;
-        free(tmp->relativeCoordinatesPrev);
-        tmp->relativeCoordinatesPrev = nullptr;
-        free(tmp);
-
-    }
+/// <summary>
+/// Aux function to delete a linked list entirely.
+/// </summary>
+/// <param name="head"></param>
+void DestroyLL(TetrominoRotateNode** head) {
+    TetrominoRotateNode* current = *head;
+    TetrominoRotateNode* next = NULL;
+    if(current != nullptr)
+        do {
+            next = current->next;
+            //delete [] current->relativeCoordinatesNext;
+            //delete [] current->relativeCoordinatesPrev;
+            free(current);
+            current = next;
+        } while (current != *head);
+    *head = NULL;
 }
+
+Piece::~Piece() {
+    
+    free(_blocks); // Clear memory for block coordinates.
+    _blocks = NULL;
+    DestroyLL(&gRotateHead);
+}
+

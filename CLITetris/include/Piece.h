@@ -92,14 +92,14 @@ public:
 	/// <param name="_r3p">rotation 3 previous</param>
 	/// <param name="_r3n">rotation 3 next</param>
 	void CreateDoublyLinkedListPointer(
-		Block* _r0p,
-		Block* _r0n,
-		Block* _r1p,
-		Block* _r1n,
-		Block* _r2p,
-		Block* _r2n,
-		Block* _r3p,
-		Block* _r3n
+		Block** _r0p,
+		Block** _r0n,
+		Block** _r1p,
+		Block** _r1n,
+		Block** _r2p,
+		Block** _r2n,
+		Block** _r3p,
+		Block** _r3n
 	);
 
 	/// <summary>
@@ -108,8 +108,8 @@ public:
 	/// <param name="_r0">rotation 0</param>
 	/// <param name="_r1">rotation 1</param>
 	void Short_CreateDoublyLinkedListPointer(
-		Block* _r0,
-		Block* _r1
+		Block** _r0,
+		Block** _r1
 	);
 
 	/// <summary>
