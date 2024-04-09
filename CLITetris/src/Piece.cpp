@@ -345,4 +345,3 @@ Piece::~Piece() {
     _blocks = NULL;
     DestroyLL(&gRotateHead);
 }
-

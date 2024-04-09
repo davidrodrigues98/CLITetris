@@ -176,13 +176,36 @@ void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
         // TBD rotate validation
         case ROTATE_LEFT:
             if (_print) wprintf(L"Debug: Game::ProcessMovement -> ROTATE_LEFT");
-            _activePiece->RotatePiece(PieceBlockRotation::LEFT);
+            RotateLeft();
             break;
         case ROTATE_RIGHT: 
             if (_print) wprintf(L"Debug: Game::ProcessMovement -> ROTATE_RIGHT");
-            _activePiece->RotatePiece(PieceBlockRotation::RIGHT);
+            RotateRight();
             break;
     }
+}
+
+void Game::RotateLeft() {
+    _activePiece->RotatePiece(PieceBlockRotation::LEFT);
+    ValidateRotation(PieceBlockRotation::LEFT);
+}
+
+void Game::RotateRight() {
+    _activePiece->RotatePiece(PieceBlockRotation::RIGHT);
+    ValidateRotation(PieceBlockRotation::RIGHT);
+}
+
+void Game::ValidateRotation(PieceBlockRotation _direction) {
+    Block* blocks = _activePiece->_blocks;
+    bool revert = false;
+    for (int i = 0; i < 4; i++) {
+        int x = (blocks + i)->x;
+        int y = (blocks + i)->y;
+        if (_gameBoard[_lineSize + _lineSize * y + x] >= 10)
+            revert = true;
+    }
+    if (revert == true)
+        _activePiece->RotatePiece((_direction == PieceBlockRotation::RIGHT ? PieceBlockRotation::LEFT : PieceBlockRotation::RIGHT));
 }
 
 bool Game::ValidateMove(KeyBind _action) {

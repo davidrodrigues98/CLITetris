@@ -109,7 +109,7 @@ int devInitialize() {
 	vector<thread> threads;
 
 	// Start threads.
-	threads.push_back(thread(AutoStepDown, 100, gameInstance));
+	threads.push_back(thread(AutoStepDown, 500, gameInstance));
 	threads.push_back(thread(GameUpdater, gameInstance));
 	threads.push_back(thread(PrintCycle, 50, gameInstance));
 

@@ -132,8 +132,30 @@ protected:
 	/// </summary>
 	bool ValidateMove(KeyBind _action);
 
+	/// <summary>
+	/// Rotates active piece to the left.
+	/// </summary>
+	void RotateLeft();
+
+	/// <summary>
+	/// Rotates active piece to the right.
+	/// </summary>
+	void RotateRight();
+
+	/// <summary>
+	/// Detects if piece rotation made the piece go through other laid pieces or borders.
+	/// </summary>
+	/// <param name="_direction">The direction the piece rotated. Piece rotates to opposite direction if its rotation is not possible.</param>
+	void ValidateRotation(PieceBlockRotation _direction);
+
+	/// <summary>
+	/// Processes piece behaviour when it touches the floor or another piece.
+	/// </summary>
 	void Land();
 
+	/// <summary>
+	/// Processes placement of blocks from active piece.
+	/// </summary>
 	void PlaceBlocks();
 
 #pragma endregion
