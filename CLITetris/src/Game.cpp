@@ -249,7 +249,36 @@ void Game::Land() {
     PlaceBlocks();
     delete(_activePiece);
     _activePiece = nullptr;
+    Demolish();
     gGameStatus = PLACE;
+}
+
+void Game::Demolish() {
+    // For each line...
+    for (int i = 0; i < gBoardRules.gameHeight - 2; i++) {
+        bool score = true;
+        // ... verify if all blocks are filled.
+        for (int j = 2; j < _lineSize - 1; j++) {
+            if (_gameBoard[_lineSize * (i + 1) + j] == Printer::Visuals::EMPTY)
+                score = false;
+        }
+        // If they are all filled, we demolish the line.
+        if (score == true) {
+            // Update score.
+            Scored();
+            for (int j = i; j != 0; j--) {
+                for (int k = 2; k < _lineSize - 1; k++) {
+                    // Clean the line.
+                    Printer::Visuals *ptr = &_gameBoard[_lineSize * (j + 1) + k];
+                    *ptr = _gameBoard[_lineSize * j + k];
+                }
+            }
+        }
+    }
+}
+
+void Game::Scored() {
+    // TBD
 }
 
 void Game::MoveDown() {

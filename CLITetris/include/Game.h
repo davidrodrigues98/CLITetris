@@ -158,6 +158,10 @@ protected:
 	/// </summary>
 	void PlaceBlocks();
 
+	void Demolish();
+
+	void Scored();
+
 #pragma endregion
 
 public:
