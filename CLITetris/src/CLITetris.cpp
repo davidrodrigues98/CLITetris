@@ -7,7 +7,7 @@ using namespace std;
 DWORD gFdwMode, gFdwOldMode;
 
 // Flags and structures that will be used in multiple threads.
-atomic<bool> gTerminateGameUpdaterThread(false), gTerminateAutoStepDownThread(false);//, gGameUpdaterInputEnabled(false);
+atomic<bool> terminateGameThreads_(false);//, gGameUpdaterInputEnabled(false);
 
 /// <summary>
 /// Waits for next windows keyboar input event and handles it accordigly.
@@ -43,7 +43,7 @@ void GameUpdater(Game *_instance) {
 	do {
 		KeyBind nextAction = win32_TimeStep(_instance, hStdIn);
 		_instance->Update(nextAction);
-	} while (true); //gTerminateGameUpdaterThread == false);
+	} while (terminateGameThreads_ == false); //gTerminateGameUpdaterThread == false);
 }
 
 /// <summary>
@@ -55,8 +55,8 @@ void AutoStepDown(int _time_ms, Game* _instance) {
 	do {
 		this_thread::sleep_for(chrono::milliseconds(_time_ms));
 		// Process the automatic down action of the active piece.
-		_instance->Update(KeyBind::DOWN);
-	} while (gTerminateAutoStepDownThread == false);
+		terminateGameThreads_ = _instance->Update(KeyBind::DOWN);
+	} while (terminateGameThreads_ == false);
 }
 
 /// <summary>
@@ -68,8 +68,7 @@ void PrintCycle(int _time_ms, Game* _instance) {
 	do {
 		this_thread::sleep_for(chrono::milliseconds(_time_ms));
 		_instance->PrintBoard();
-	} while (true);
-	
+	} while (terminateGameThreads_ == false);
 }
 
 void ManageConsoleMode(bool _gameMode) {
@@ -93,7 +92,14 @@ int BeforeInitialize() {
 	return res;
 }
 
-int devInitialize() {
+void GameOver(Game* _gameInstance) {
+
+	// Free game instance.
+	delete _gameInstance;
+	system("pause");
+}
+
+int StartGame() {
 	// Configures CLI
 	ManageConsoleMode(true);
 
@@ -119,12 +125,30 @@ int devInitialize() {
 	}
 
 	endwin();
+
+	// This section only happens when the game is over.
+	GameOver(gameInstance);
+
+	return 0;
+}
+
+int defInitialize() {
+	std::vector<std::string> options = { "Play", "Exit" };
+	Menu menu(options);
+	int result = menu.Run();
+	switch (result) {
+	case 1:
+		StartGame();
+		break;
+	}
 	return 0;
 }
 
 int Initialize(bool _dev) {
 	if (_dev)
-		devInitialize();
+		StartGame();
+	else
+		defInitialize();
 	return 0;
 }
 
@@ -132,5 +156,5 @@ int Initialize(bool _dev) {
 int main()
 {
 	BeforeInitialize();
-	Initialize(true);
+	Initialize();
 }

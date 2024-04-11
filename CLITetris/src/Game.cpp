@@ -133,24 +133,28 @@ Tetromino Game::TakeFromTetrominoQueue(Tetromino _debugTetType) {
     return _debugTetType;
 }
 
-void Game::Update(KeyBind _nextAction, bool _print) {
+bool Game::Update(KeyBind _nextAction, bool _print) {
+    bool returning = false;
     switch (gGameStatus) {
     case GameStatus::PLACE: {
         _activePiece = new Piece(TakeFromTetrominoQueue());
         if (_print)
             wprintf(L"Debug: Game::Update - Active piece is tetromino: %i\n", _activePiece->tetromino);
         gGameStatus = GameStatus::MOVE;
+        _stepdownCount = 0;
         break;
     }
     case GameStatus::MOVE:
         UpdateBoard(true);
-        ProcessMovement(_nextAction, _print);
+        returning = ProcessMovement(_nextAction, _print);
         UpdateBoard();
         break;
     }
+    return returning;
 }
 
-void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
+bool Game::ProcessMovement(KeyBind _nextAction, bool _print) {
+    bool returning = false;
     switch (_nextAction) {
         case DOWN: 
             if (ValidateMove(_nextAction)) {
@@ -158,6 +162,9 @@ void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
                 MoveDown();
             }
             else {
+                if (_stepdownCount <= 1)
+                    returning = true;
+                else
                 Land();
             }
             break;
@@ -183,6 +190,7 @@ void Game::ProcessMovement(KeyBind _nextAction, bool _print) {
             RotateRight();
             break;
     }
+    return returning;
 }
 
 void Game::RotateLeft() {
@@ -286,6 +294,7 @@ void Game::MoveDown() {
     for (int i = 0; i < 4; i++) {
         (blocks + i)->y++;
     }
+    _stepdownCount++;;
 }
 
 void Game::MoveLeft() {
@@ -383,6 +392,18 @@ void Game::PrintBoard() {
     refresh();
 }
 
+void Game::DestroyLL(TetrominoNode** head) {
+    TetrominoNode* current = *head;
+    TetrominoNode* next = NULL;
+    if (current != nullptr)
+        do {
+            next = current->next;
+            free(current);
+            current = next;
+        } while (current != *head);
+    *head = NULL;
+}
+
 Game::Game(bool _doubleBag, bool _print) {
     Game::GenerateRandomTetrominoQueue(_doubleBag, _print);
     // Setting new game status.
@@ -392,15 +413,13 @@ Game::Game(bool _doubleBag, bool _print) {
 }
 
 Game::~Game() {
-    free(_gameBoard);                           // Clear memory for game board.
-
-    TetrominoNode* tmp;                         // Clear memory for tetromino queue.
-    while (gQueueHead != nullptr) {
-        tmp = gQueueHead;
-        gQueueHead = gQueueHead->next;
-        free(tmp);
-    }
-
-    if(_activePiece != nullptr)                 // Calls destructor for active piece if that was not done yet.
+    free(_gameBoard);               // Clear memory for game board.
+    
+    gQueueCurrent = nullptr;        // Reset other linked list variables.
+    gQueueTail = nullptr;
+    
+    DestroyLL(&gQueueHead);         // Clear memory for tetromino queue.
+    
+    if(_activePiece != nullptr)     // Calls destructor for active piece if that was not done yet.
         delete(_activePiece);
 }

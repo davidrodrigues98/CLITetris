@@ -22,6 +22,7 @@
 #include <thread>
 #include <curses.h>
 #include <Global.h>
+#include <Menu.h>
 #pragma endregion
 
 #pragma region Global macro definitions.
@@ -46,12 +47,18 @@ int BeforeInitialize();
 /// <summary>
 /// Standard program initialization.
 /// </summary>
-/// <param name="_dev">= true if the application must start in developer mode.</param>
+/// <param name="_dev">= true if the application must start directly inside the game.</param>
 /// <returns>0</returns>
 int Initialize(bool _dev = false);
 
 ///<summary>
-/// Function for testing purposes while developing or updating.
+/// Function for starting game objects.
 ///</summary>
 ///<returns>0</returns>
-int devInitialize();
+int StartGame();
+
+/// <summary>
+/// Default game initialize.
+/// </summary>
+/// <returns>0</returns>
+int defInitialize();

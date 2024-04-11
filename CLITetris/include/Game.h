@@ -59,7 +59,7 @@ class Game {
 protected:
 
 #pragma region Properties
-	int _lineSize;
+	int _lineSize, _stepdownCount = 0;
 	GameStatus gGameStatus;
 	Printer::Visuals* _gameBoard = nullptr;
 	BoardRules _boardRules;
@@ -99,7 +99,7 @@ protected:
 	/// </summary>
 	/// <param name="_nextAction">User input.</param>
 	/// <param name="_print">Print debug lines for testing purposes.</param>
-	void ProcessMovement(KeyBind _nextAction, bool _print=false);
+	bool ProcessMovement(KeyBind _nextAction, bool _print=false);
 
 	/// <summary>
 	/// Allocates memory for the game board.
@@ -158,9 +158,21 @@ protected:
 	/// </summary>
 	void PlaceBlocks();
 
+	/// <summary>
+	/// Checks whether any line is filled with blocks. If so, deletes the row.
+	/// </summary>
 	void Demolish();
 
+	/// <summary>
+	/// Increments score points to the game status.
+	/// </summary>
 	void Scored();
+
+	/// <summary>
+	/// Auxiliary function to free queue memory when the game instance is removed.
+	/// </summary>
+	/// <param name="head">Linked list head.</param>
+	void DestroyLL(TetrominoNode** head);
 
 #pragma endregion
 
@@ -177,7 +189,7 @@ public:
 	/// </summary>
 	/// <param name="_nextAction">The input that will be processed. This is definitive.</param>
 	/// <param name="_print">Print debug lines for testing purposes.</param>
-	void Update(KeyBind _nextAction, bool _print=false);
+	bool Update(KeyBind _nextAction, bool _print=false);
 
 	/// <summary>
 	/// Function to start the game in the standard way. No debugs or test prints: Official game start.
